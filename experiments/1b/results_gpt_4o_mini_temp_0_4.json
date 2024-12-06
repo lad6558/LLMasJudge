@@ -1,0 +1,23 @@
+{
+  "judge_model": "gpt-4o-mini",
+  "temperature": 0.4,
+  "individual_variances": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.21000000000000002
+  ],
+  "average_variance": 0.021,
+  "num_responses": 10,
+  "parameters": {
+    "scale": 10,
+    "num_trials": 10,
+    "temperature": 0.4
+  }
+}

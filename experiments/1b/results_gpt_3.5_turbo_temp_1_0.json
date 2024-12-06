@@ -1,0 +1,23 @@
+{
+  "judge_model": "gpt-3.5-turbo",
+  "temperature": 1.0,
+  "individual_variances": [
+    0.21000000000000002,
+    0.21000000000000002,
+    0.21000000000000002,
+    0.21000000000000002,
+    0.0,
+    0.0,
+    0.09,
+    0.20999999999999996,
+    0.16000000000000003,
+    0.4
+  ],
+  "average_variance": 0.17,
+  "num_responses": 10,
+  "parameters": {
+    "scale": 10,
+    "num_trials": 10,
+    "temperature": 1.0
+  }
+}

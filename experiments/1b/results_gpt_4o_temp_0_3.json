@@ -1,0 +1,23 @@
+{
+  "judge_model": "gpt-4o",
+  "temperature": 0.3,
+  "individual_variances": [
+    0.16,
+    0.0,
+    0.09,
+    0.09,
+    0.0,
+    0.0,
+    0.0,
+    0.21000000000000002,
+    0.08999999999999997,
+    0.0
+  ],
+  "average_variance": 0.064,
+  "num_responses": 10,
+  "parameters": {
+    "scale": 10,
+    "num_trials": 10,
+    "temperature": 0.3
+  }
+}
