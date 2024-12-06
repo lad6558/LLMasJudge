@@ -26,8 +26,9 @@ def judge_response(
     reasoning: bool = False,
     scale: int = 10,
     temperature: float = 0.5,
-    judge: str = "gpt-4o-mini"
-) -> Dict[str, Any]:
+    judge: str = "gpt-4o-mini",
+    num_trials: int = 1
+) -> List[Dict[str, Any]]:
     """
     Judge an LLM response using a specified judge model on a scale from 1-N
 
@@ -37,9 +38,10 @@ def judge_response(
         scale (int): Maximum score value (defaults to 10)
         temperature (float): Temperature for the API call (defaults to 0.5)
         judge (str): The model to use as judge (defaults to "gpt-4o-mini")
+        num_trials (int): Number of trials to run (defaults to 1)
 
     Returns:
-        Dict containing the score and explanation
+        List of dicts containing the scores and explanations
     """
 
     # Define the function schema based on reasoning parameter
@@ -109,27 +111,55 @@ Please provide only a score, with no explanation."""
             functions=functions,
             function_call={"name": "submit_score"},
             temperature=temperature,
-            n=10,
+            n=num_trials,
         )
 
-        # Extract the function call
-        function_call = completion.choices[0].message.function_call
+        results = []
+        # Process all choices from the completion
+        for choice in completion.choices:
+            try:
+                # Extract the function call
+                function_call = choice.message.function_call
+                # Parse the response
+                result = json.loads(function_call.arguments)
+                results.append({
+                    "score": result["score"],
+                    "explanation": result.get("explanation", "No explanation requested"),
+                    "success": True
+                })
+            except json.JSONDecodeError as e:
+                results.append({
+                    "score": None,
+                    "explanation": f"Failed to parse function call response: {str(e)}",
+                    "success": False
+                })
+            except Exception as e:
+                results.append({
+                    "score": None,
+                    "explanation": f"Unexpected error processing choice: {str(e)}",
+                    "success": False
+                })
 
-        # Parse the response
-        result = json.loads(function_call.arguments)
+        return results
 
-        return {
-            "score": result["score"],
-            "explanation": result.get("explanation", "No explanation requested"),
-            "success": True
-        }
-
-    except Exception as e:
-        return {
+    except openai.RateLimitError as e:
+        return [{
             "score": None,
-            "explanation": f"Error occurred: {str(e)}",
+            "explanation": f"Rate limit exceeded: {str(e)}",
             "success": False
-        }
+        }]
+    except openai.APIError as e:
+        return [{
+            "score": None,
+            "explanation": f"OpenAI API error: {str(e)}",
+            "success": False
+        }]
+    except Exception as e:
+        return [{
+            "score": None,
+            "explanation": f"Unexpected error: {str(e)}",
+            "success": False
+        }]
 
 
 async def evaluate_all_responses(
@@ -150,32 +180,28 @@ async def evaluate_all_responses(
             
             try:
                 data = json.loads(line)
+                # Validate data structure
+                if not isinstance(data, dict) or 'choices' not in data or not data['choices']:
+                    raise ValueError("Invalid response data structure")
+                if 'turns' not in data['choices'][0] or not data['choices'][0]['turns']:
+                    raise ValueError("Invalid turns data structure")
+                
                 response = data['choices'][0]['turns'][0]
                 
                 # Judge response multiple times
-                results = []
-                successful_trials = 0
+                results = judge_response(
+                    response,
+                    reasoning=False,
+                    scale=scale,
+                    temperature=temperature,
+                    judge=judge_model,
+                    num_trials=num_trials
+                )
                 
-                # Run multiple trials
-                for trial in range(num_trials):
-                    result = judge_response(
-                        response,
-                        reasoning=False,
-                        scale=scale,
-                        temperature=temperature,
-                        judge=judge_model
-                    )
-                    
-                    if result['success']:
-                        results.append(result)
-                        successful_trials += 1
-                    else:
-                        print(f"Trial {trial+1} failed: {result['explanation']}")
-                    
-                    await asyncio.sleep(1)  # Rate limiting
+                successful_trials = sum(1 for result in results if result['success'])
                 
                 # Calculate variance if we have any successful results
-                scores = [r['score'] for r in results if r['success']]
+                scores = [result['score'] for result in results if result['success']]
                 if scores:
                     avg_score = sum(scores) / len(scores)
                     variance = sum((s - avg_score) ** 2 for s in scores) / len(scores)
@@ -185,6 +211,15 @@ async def evaluate_all_responses(
                     failed_responses.append(line_num)
                     print(f"No successful trials for response {line_num}")
                 
+                # Add rate limiting between responses
+                await asyncio.sleep(2)  # 2 second delay between batches
+                
+            except json.JSONDecodeError as e:
+                failed_responses.append(line_num)
+                print(f"Failed to parse response {line_num}: {str(e)}")
+            except ValueError as e:
+                failed_responses.append(line_num)
+                print(f"Invalid data structure in response {line_num}: {str(e)}")
             except Exception as e:
                 failed_responses.append(line_num)
                 print(f"Error processing response {line_num}: {str(e)}")
