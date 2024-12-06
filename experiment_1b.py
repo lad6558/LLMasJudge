@@ -2,7 +2,7 @@ import asyncio
 import json
 import argparse
 from pathlib import Path
-from main import evaluate_all_responses
+from core import evaluate_all_responses
 import asyncio
 from tqdm import tqdm
 
