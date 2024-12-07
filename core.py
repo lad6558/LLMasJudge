@@ -11,6 +11,8 @@ from openai import OpenAI
 from tqdm import tqdm
 
 load_dotenv()
+
+
 def _set_env(var: str):
     if not os.environ.get(var):
         os.environ[var] = getpass.getpass(f"{var}: ")
@@ -24,7 +26,7 @@ client = OpenAI()
 
 def judge_response(
     response: str,
-    reasoning: bool = False,
+    reasoning: str = None,
     scale: int = 10,
     temperature: float = 0.5,
     judge: str = "gpt-4o-mini",
@@ -35,7 +37,7 @@ def judge_response(
 
     Args:
         response (str): The response from an LLM to evaluate
-        reasoning (bool): Whether to ask for reasoning before scoring (defaults to False)
+        reasoning (str): When to ask for reasoning: None, "before", or "after"
         scale (int): Maximum score value (defaults to 10)
         temperature (float): Temperature for the API call (defaults to 0.5)
         judge (str): The model to use as judge (defaults to "gpt-4o-mini")
@@ -46,7 +48,30 @@ def judge_response(
     """
 
     # Define the function schema based on reasoning parameter
-    if reasoning:
+    if reasoning == "after":
+        functions = [
+            {
+                "name": "submit_score",
+                "description": "Submit a score and explanation for the LLM response",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "score": {
+                            "type": "integer",
+                            "description": f"Score from 1-{scale} ({scale} being best)",
+                            "minimum": 1,
+                            "maximum": scale
+                        },
+                        "explanation": {
+                            "type": "string",
+                            "description": "Detailed explanation for the score"
+                        }
+                    },
+                    "required": ["score", "explanation"]
+                }
+            }
+        ]
+    elif reasoning == "before":
         functions = [
             {
                 "name": "submit_score",
@@ -65,7 +90,7 @@ def judge_response(
                             "maximum": scale
                         },
                     },
-                    "required": ["score", "explanation"]
+                    "required": ["explanation", "score"]
                 }
             }
         ]
@@ -90,13 +115,20 @@ def judge_response(
         ]
 
     # Construct the prompt based on reasoning parameter
-    if reasoning:
-        prompt = f"""You are an expert judge evaluating AI responses. First, provide your detailed reasoning about the response's quality, then give a score from 1-{scale}.
+    if reasoning == "before":
+        prompt = f"""You are an expert judge evaluating AI responses. Let's think step by step about the response's quality.
 
 Response to evaluate:
 {response}
 
-Please think step by step about the response's strengths and weaknesses before providing your score."""
+Please think step by step about the response's strengths and weaknesses before providing your score on a scale from 1-{scale}."""
+    elif reasoning == "after":
+        prompt = f"""You are an expert judge evaluating AI responses.
+
+Response to evaluate:
+{response}
+
+First provide a score from 1-{scale}, then explain your reasoning step by step."""
     else:
         prompt = f"""You are an expert judge evaluating AI responses. Please evaluate the following response on a scale from 1-{scale}.
 
@@ -168,24 +200,26 @@ async def evaluate_all_responses(
     scale: int = 10,
     num_trials: int = 10,
     temperature: float = 0.5,
-    cutoff: int = 80
+    cutoff: int = 80,
+    reasoning: bool = False
 ) -> List[float]:
     file_path = Path("data/mt_bench/model_answer/gpt-4.jsonl")
     variances = []
     failed_responses = []
-    
+
     # Count total lines first (up to cutoff)
     total_lines = sum(1 for _ in open(file_path) if _ is not None)
     total_lines = min(cutoff, total_lines)
-    
+
     with open(file_path, 'r') as f:
         # Create progress bar for responses
-        pbar = tqdm(total=total_lines, desc=f"Evaluating responses with {judge_model}")
-        
+        pbar = tqdm(total=total_lines,
+                    desc=f"Evaluating responses with {judge_model}")
+
         for line_num, line in enumerate(f, 1):
             if line_num > cutoff:
                 break
-                
+
             try:
                 data = json.loads(line)
                 # Validate data structure
@@ -193,33 +227,36 @@ async def evaluate_all_responses(
                     raise ValueError("Invalid response data structure")
                 if 'turns' not in data['choices'][0] or not data['choices'][0]['turns']:
                     raise ValueError("Invalid turns data structure")
-                
+
                 response = data['choices'][0]['turns'][0]
-                
+
                 # Judge response multiple times
                 results = judge_response(
                     response,
-                    reasoning=False,
+                    reasoning,
                     scale=scale,
                     temperature=temperature,
                     judge=judge_model,
                     num_trials=num_trials
                 )
-                
-                successful_trials = sum(1 for result in results if result['success'])
-                
+
+                successful_trials = sum(
+                    1 for result in results if result['success'])
+
                 # Calculate variance if we have any successful results
-                scores = [result['score'] for result in results if result['success']]
+                scores = [result['score']
+                          for result in results if result['success']]
                 if scores:
                     avg_score = sum(scores) / len(scores)
-                    variance = sum((s - avg_score) ** 2 for s in scores) / len(scores)
+                    variance = sum((s - avg_score) **
+                                   2 for s in scores) / len(scores)
                     variances.append(variance)
-                    pbar.set_postfix({'variance': f"{variance:.4f}", 'trials': f"{successful_trials}/{num_trials}"})
+                    pbar.set_postfix(
+                        {'variance': f"{variance:.4f}", 'trials': f"{successful_trials}/{num_trials}"})
                 else:
                     failed_responses.append(line_num)
                     pbar.set_postfix({'status': 'failed'})
-                
-                
+
             except json.JSONDecodeError as e:
                 failed_responses.append(line_num)
                 pbar.set_postfix({'error': 'JSON parse error'})
@@ -228,13 +265,15 @@ async def evaluate_all_responses(
                 pbar.set_postfix({'error': 'Invalid data structure'})
             except Exception as e:
                 failed_responses.append(line_num)
-                pbar.set_postfix({'error': str(e)[:20]})  # Show first 20 chars of error
-            
+                # Show first 20 chars of error
+                pbar.set_postfix({'error': str(e)[:20]})
+
             pbar.update(1)
-        
+
         pbar.close()
-    
+
     if not variances:
-        raise RuntimeError(f"No successful evaluations completed with judge {judge_model}. Failed responses: {failed_responses}")
-    
+        raise RuntimeError(
+            f"No successful evaluations completed with judge {judge_model}. Failed responses: {failed_responses}")
+
     return variances
