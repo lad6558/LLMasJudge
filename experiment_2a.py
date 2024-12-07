@@ -63,7 +63,8 @@ async def run_experiment(num_trials: int = 10, scale: int = 10, cutoff: int = 80
                 num_trials=num_trials,
                 temperature=temp,
                 cutoff=cutoff,
-                reasoning="before"
+                reasoning="before",
+                example_folder=exp_dir / "examples",
             )
 
             avg_variance = sum(variances) / len(variances)
