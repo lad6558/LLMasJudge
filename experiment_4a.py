@@ -3,6 +3,9 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 from enum import Enum
+import json
+from datasets import load_dataset
+from tqdm import tqdm
 
 load_dotenv()
 client = OpenAI()
@@ -191,5 +194,5 @@ the assistants. Be as objective as possible.
         return Verdict.TIE.value  # Default to tie in case of errors
 
 
-evaluate_on_human_preferences(
-    comparison_function=pairwise_comparison, cutoff=10)
+print(evaluate_on_human_preferences(
+    comparison_function=pairwise_comparison, cutoff=10))
