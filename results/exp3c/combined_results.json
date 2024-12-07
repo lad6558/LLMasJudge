@@ -1,0 +1,132 @@
+{
+  "experiment": "3c",
+  "description": "Testing model size vs judgment variance with detailed scoring scale",
+  "parameters": {
+    "scale": 10,
+    "num_trials": 10,
+    "cutoff": 10
+  },
+  "results": {
+    "0.0": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.1": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.2": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.3": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.4": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.5": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.6": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.7": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.8": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "0.9": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    },
+    "1.0": {
+      "gpt-3.5-turbo": {
+        "error": "No successful evaluations completed with judge gpt-3.5-turbo. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o-mini": {
+        "error": "No successful evaluations completed with judge gpt-4o-mini. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      },
+      "gpt-4o": {
+        "error": "No successful evaluations completed with judge gpt-4o. Failed responses: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+      }
+    }
+  }
+}

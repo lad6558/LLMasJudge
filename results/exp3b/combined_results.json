@@ -1,0 +1,132 @@
+{
+  "experiment": "3b",
+  "description": "Testing model size vs judgment variance with reference examples",
+  "parameters": {
+    "scale": 10,
+    "num_trials": 10,
+    "cutoff": 10
+  },
+  "results": {
+    "0.0": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.1": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.2": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.3": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.4": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.5": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.6": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.7": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.8": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "0.9": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    },
+    "1.0": {
+      "gpt-3.5-turbo": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o-mini": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      },
+      "gpt-4o": {
+        "error": "[Errno 2] No such file or directory: 'data/responses.jsonl'"
+      }
+    }
+  }
+}
