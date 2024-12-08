@@ -1,198 +1,174 @@
+from core_4 import evaluate_on_human_preferences_batch, grade_then_compare, pairwise_comparison
+from core import judge_response
+import numpy as np
+from typing import Dict, List
+import matplotlib.pyplot as plt
 from pathlib import Path
-from openai import OpenAI
-import os
-from dotenv import load_dotenv
-from enum import Enum
 import json
-from datasets import load_dataset
-from tqdm import tqdm
-
-load_dotenv()
-client = OpenAI()
 
 
-class Verdict(str, Enum):
-    MODEL_A = "model_a"
-    MODEL_B = "model_b"
-    TIE = "tie"
+def create_grading_function(temperature: float, reasoning: str = None, num_trials: int = 1, judge: str = "gpt-4o-mini"):
+    """Creates a grading function with fixed temperature and reasoning setting"""
+    def grade(question: str, response: str) -> Dict:
+        results = judge_response(
+            response=response,
+            question=question,
+            temperature=temperature,
+            judge=judge,
+            reasoning=reasoning,
+            num_trials=num_trials
+        )
+        return results[0]  # Return first (and only) result
+    return grade
 
 
-def load_dataset_human_preference() -> Path:
-    """Path
-    Load the MT-bench human judgments dataset and cache it locally.
+def run_temperature_experiment(cutoff: int = 100):
+    """Test different temperature settings and compare with pairwise baseline"""
+    # Create results directory and exp4a subdirectory
+    results_dir = Path("results")
+    results_dir.mkdir(exist_ok=True)
+    exp_dir = results_dir / "exp4a"
+    exp_dir.mkdir(exist_ok=True)
 
-    Returns:
-        Path: Path to the cached dataset JSON file
-    """
-    output_path = Path("data/mt_bench_human_judgments.json")
+    # Create list of comparison functions for each temperature
+    temperatures = np.arange(0, 1.1, 0.1)  # 0.0 to 1.0 in steps of 0.1
+    comparison_functions = []
 
-    # Skip download if file already exists
-    if output_path.exists():
-        return output_path
+    # Add baseline pairwise comparison as first function
+    comparison_functions.append(pairwise_comparison)
 
-    # Ensure data directory exists
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    # Add temperature-based comparison functions without reasoning
+    for temp in temperatures:
+        grader = create_grading_function(temperature=temp, reasoning=None)
+        comparison_fn = grade_then_compare(grader)
+        comparison_functions.append(comparison_fn)
 
-    # Load dataset
-    dataset = load_dataset("lmsys/mt_bench_human_judgments")
+    # Add temperature-based comparison functions with reasoning="before"
+    for temp in temperatures:
+        grader = create_grading_function(temperature=temp, reasoning="before")
+        comparison_fn = grade_then_compare(grader)
+        comparison_functions.append(comparison_fn)
 
-    # Convert to list of conversation pairs from the 'human' split
-    json_data = [
-        {
-            'question_id': item['question_id'],
-            'model_a': item['model_a'],
-            'model_b': item['model_b'],
-            'winner': item['winner'],
-            'judge': item['judge'],
-            'conversation_a': item['conversation_a'],
-            'conversation_b': item['conversation_b'],
-            'turn': item['turn']
-        }
-        for item in dataset['human']
+    # Add additional comparison functions at temperature 0.5
+    # GPT-4o-mini pointwise without reasoning
+    grader = create_grading_function(temperature=0.5)
+    comparison_functions.append(grade_then_compare(grader))
+
+    # GPT-4o-mini pointwise with reasoning before
+    grader = create_grading_function(temperature=0.5, reasoning="before")
+    comparison_functions.append(grade_then_compare(grader))
+
+    # GPT-4o-mini pointwise with reasoning after
+    grader = create_grading_function(temperature=0.5, reasoning="after")
+    comparison_functions.append(grade_then_compare(grader))
+
+    # GPT-4o-mini with 10 trials
+    grader = create_grading_function(temperature=0.5, num_trials=10)
+    comparison_functions.append(grade_then_compare(grader))
+
+    # GPT-4o-mini with reasoning before and 10 trials
+    grader = create_grading_function(
+        temperature=0.5, reasoning="before", num_trials=10)
+    comparison_functions.append(grade_then_compare(grader))
+
+    # GPT-4o pointwise
+    grader = create_grading_function(temperature=0.5, judge="gpt-4o")
+    comparison_functions.append(grade_then_compare(grader))
+
+    # GPT-3.5-turbo with reasoning before and 10 trials
+    grader = create_grading_function(temperature=0.5, reasoning="before",
+                                     num_trials=10, judge="gpt-3.5-turbo")
+    comparison_functions.append(grade_then_compare(grader))
+
+    # Evaluate all functions on the same set of examples
+    accuracies = evaluate_on_human_preferences_batch(
+        comparison_functions, cutoff=cutoff)
+
+    # Split results
+    baseline_accuracy = accuracies[0]
+    no_reasoning_accuracies = accuracies[1:12]  # Next 11 results
+    with_reasoning_accuracies = accuracies[12:23]  # Next 11 results
+    additional_accuracies = accuracies[23:]  # Last 7 results
+
+    # Create temperature vs accuracy plot
+    plt.figure(figsize=(10, 6))
+    plt.plot(temperatures, no_reasoning_accuracies, 'bo-',
+             label='Temperature-based (No reasoning)')
+    plt.plot(temperatures, with_reasoning_accuracies, 'go-',
+             label='Temperature-based (With reasoning)')
+    plt.axhline(y=baseline_accuracy, color='r', linestyle='--',
+                label='Pairwise baseline')
+    plt.xlabel('Temperature')
+    plt.ylabel('Alignment Accuracy')
+    plt.title('Temperature vs Human Preference Alignment')
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(exp_dir / 'temperature_alignment.png')
+    plt.close()
+
+    # Create bar plot for temperature 0.5 comparisons
+    plt.figure(figsize=(12, 6))
+
+    # Prepare data for bar plot
+    methods = [
+        'Pairwise\nbaseline',
+        'GPT-4o-mini\nbasic',
+        'GPT-4o-mini\nw/reasoning',
+        'GPT-4o-mini\nw/reasoning after',
+        'GPT-4o-mini\n10 trials',
+        'GPT-4o-mini\nw/reasoning\n10 trials',
+        'GPT-4o\nbasic',
+        'GPT-3.5-turbo\nw/reasoning\n10 trials'
     ]
 
-    # Save as JSON with indentation
-    with open(output_path, 'w') as f:
-        json.dump(json_data, f, indent=4)
+    temp_05_accuracies = [
+        baseline_accuracy,  # Pairwise baseline
+        additional_accuracies[0],  # GPT-4o-mini basic
+        additional_accuracies[1],  # GPT-4o-mini w/reasoning
+        additional_accuracies[2],  # GPT-4o-mini w/reasoning after
+        additional_accuracies[3],  # GPT-4o-mini 10 trials
+        additional_accuracies[4],  # GPT-4o-mini w/reasoning 10 trials
+        additional_accuracies[5],  # GPT-4o basic
+        additional_accuracies[6],  # GPT-3.5-turbo w/reasoning 10 trials
+    ]
 
-    return output_path
+    plt.bar(methods, temp_05_accuracies)
+    plt.xticks(rotation=45, ha='right')
+    plt.ylabel('Alignment Accuracy')
+    plt.title('Comparison of Different Methods (Temperature = 0.5)')
+    plt.grid(True, axis='y')
+    plt.tight_layout()  # Adjust layout to prevent label cutoff
+    plt.savefig(exp_dir / 'method_comparison.png')
+    plt.close()
 
-
-def evaluate_on_human_preferences(comparison_function, cutoff: int = None) -> float:
-    """
-    Evaluate a comparison function against human preferences from MT-bench.
-
-    Args:
-        comparison_function: Function that takes conversation_a and conversation_b and returns
-                           "model_a", "model_b", or "tie"
-        cutoff: Number of examples to evaluate (None for all examples)
-
-    Returns:
-        float: Accuracy score where ties count as 0.5 if they match with a model choice
-    """
-    load_dataset_human_preference()
-
-    with open("data/mt_bench_human_judgments.json", 'r') as f:
-        judgments = json.load(f)
-
-    # Randomly sample if cutoff is specified
-    if cutoff is not None:
-        import random
-        judgments = random.sample(judgments, min(cutoff, len(judgments)))
-
-    total_score = 0
-
-    # Create progress bar
-    for item in tqdm(judgments, desc="Evaluating responses"):
-        # Get model prediction
-        pred = comparison_function(
-            item['conversation_a'], item['conversation_b'], item['turn'])
-
-        # Get human judgment
-        truth = item['winner']
-
-        # Calculate score
-        if pred == truth:
-            # Direct match
-            total_score += 1
-        elif "tie" in [pred, truth]:
-            total_score += 0.5
-
-    # Calculate accuracy
-    accuracy = total_score / len(judgments)
-
-    return accuracy
-
-
-def pairwise_comparison(conversation_a, conversation_b, turn: int) -> str:
-    """
-    Compare two conversations and return which one is better.
-
-    Args:
-        conversation_a: List of message dictionaries for first conversation
-        conversation_b: List of message dictionaries for second conversation
-        turn: Which turn in the conversation to evaluate (1-based index)
-
-    Returns:
-        str: "model_a", "model_b", or "tie"
-    """
-    # Calculate the message index for the turn (2 messages per turn: user + assistant)
-    msg_idx = (turn - 1) * 2
-
-    # Extract the question and answers from the specific turn
-    question = conversation_a[msg_idx]['content']
-    answer_a = conversation_a[msg_idx + 1]['content']
-    answer_b = conversation_b[msg_idx + 1]['content']
-
-    # Construct the prompt
-    prompt = f"""[System]
-Please act as an impartial judge and evaluate the quality of the responses provided by two
-AI assistants to the user question displayed below. You should choose the assistant that
-follows the user's instructions and answers the user's question better. Your evaluation
-should consider factors such as the helpfulness, relevance, accuracy, depth, creativity,
-and level of detail of their responses. Begin your evaluation by comparing the two
-responses and provide a short explanation. Avoid any position biases and ensure that the
-order in which the responses were presented does not influence your decision. Do not allow
-the length of the responses to influence your evaluation. Do not favor certain names of
-the assistants. Be as objective as possible.
-
-[User Question]
-{question}
-
-[The Start of Assistant A's Answer]
-{answer_a}
-[The End of Assistant A's Answer]
-
-[The Start of Assistant B's Answer]
-{answer_b}
-[The End of Assistant B's Answer]"""
-
-    try:
-        # Define the function schema
-        functions = [
-            {
-                "name": "submit_verdict",
-                "description": "Submit a verdict about which response was better",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "explanation": {
-                            "type": "string",
-                            "description": "Explanation for the verdict"
-                        },
-                        "verdict": {
-                            "type": "string",
-                            "enum": [v.value for v in Verdict],
-                            "description": "The verdict of which response was better"
-                        },
-                    },
-                    "required": ["explanation", "verdict"]
-                }
+    # Save combined results
+    combined_results = {
+        "experiment": "4a",
+        "description": "Testing temperature effects on human preference alignment",
+        "parameters": {
+            "cutoff": cutoff,
+        },
+        "results": {
+            "baseline_accuracy": baseline_accuracy,
+            "temperatures": temperatures.tolist(),
+            "no_reasoning": {
+                temp: acc for temp, acc in zip(temperatures, no_reasoning_accuracies)
+            },
+            "with_reasoning": {
+                temp: acc for temp, acc in zip(temperatures, with_reasoning_accuracies)
+            },
+            "method_comparison": {
+                method: acc for method, acc in zip(methods, temp_05_accuracies)
             }
-        ]
+        }
+    }
 
-        # Get response from OpenAI with function calling
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
-            functions=functions,
-            function_call={"name": "submit_verdict"},
-            temperature=0.5,
-        )
+    # Save combined results
+    with open(exp_dir / 'combined_results.json', 'w') as f:
+        json.dump(combined_results, f, indent=2)
 
-        # Extract the function call
-        function_call = response.choices[0].message.function_call
-
-        # Parse the response
-        import json
-        result = json.loads(function_call.arguments)
-
-        return result["verdict"]
-
-    except Exception as e:
-        print(f"Error in comparison: {str(e)}")
-        return Verdict.TIE.value  # Default to tie in case of errors
+    return combined_results
 
 
-print(evaluate_on_human_preferences(
-    comparison_function=pairwise_comparison, cutoff=10))
+if __name__ == "__main__":
+    results = run_temperature_experiment(cutoff=10)
