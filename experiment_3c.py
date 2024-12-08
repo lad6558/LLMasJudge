@@ -26,7 +26,7 @@ async def run_experiment(num_trials: int = 10, scale: int = 10, cutoff: int = 80
     exp_dir.mkdir(exist_ok=True)
     
     judge_models = ["gpt-3.5-turbo", "gpt-4o-mini", "gpt-4o"]
-    temperatures = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    temperatures = [0.3, 0.5, 1.0]
     
     # Store all results for final analysis
     all_results = {
@@ -117,7 +117,7 @@ def main():
                       help='Number of times to judge each response (default: 10)')
     parser.add_argument('--scale', type=int, default=10,
                       help='Maximum score value (default: 10)')
-    parser.add_argument('--cutoff', type=int, default=10,
+    parser.add_argument('--cutoff', type=int, default=80,
                       help='Maximum number of responses to evaluate (default: 10)')
     
     args = parser.parse_args()

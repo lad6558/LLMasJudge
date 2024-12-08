@@ -11,6 +11,8 @@ from openai import OpenAI
 from tqdm import tqdm
 
 load_dotenv()
+
+
 def _set_env(var: str):
     if not os.environ.get(var):
         os.environ[var] = getpass.getpass(f"{var}: ")
@@ -24,43 +26,66 @@ client = OpenAI()
 
 def judge_response(
     response: str,
-    reasoning: bool = False,
+    question: str,
+    reasoning: str = None,
     scale: int = 10,
     temperature: float = 0.5,
-    judge: str = "gpt-4o-mini",
+    judge: str = "gpt-4o-mini",  # gpt-4o-mini is a valid model
     num_trials: int = 1
-) -> List[Dict[str, Any]]:
+) -> List[Dict]:
     """
-    Judge an LLM response using a specified judge model on a scale from 1-N
+    Judge a response given its question context
 
     Args:
-        response (str): The response from an LLM to evaluate
-        reasoning (bool): Whether to ask for reasoning before scoring (defaults to False)
-        scale (int): Maximum score value (defaults to 10)
-        temperature (float): Temperature for the API call (defaults to 0.5)
-        judge (str): The model to use as judge (defaults to "gpt-4o-mini")
-        num_trials (int): Number of trials to run (defaults to 1)
+        response: The response to evaluate
+        question: The question that prompted the response
+        reasoning: Whether to include reasoning ("before", "after", or None)
+        scale: Rating scale (default 10)
+        temperature: Sampling temperature
+        judge: Model to use as judge
+        num_trials: Number of trials to run
 
     Returns:
-        List of dicts containing the scores and explanations
+        List of dicts containing:
+            - score: int or None if failed
+            - explanation: str explanation or error message
+            - success: bool indicating if scoring succeeded
+            - raw_prompt: str prompt sent to judge
+            - raw_response: str raw response from judge
     """
 
     # Define the function schema based on reasoning parameter
-    if reasoning:
+    # "before" and "after" have different orders of arguments, the difference is in the order of score and explanation
+    if reasoning == "after":
         functions = [
             {
                 "name": "submit_score",
-                "description": """Submit a score for the LLM response. On a scale of 1 to 10:
-    1 = Extremely terrible (completely wrong or nonsensical)
-    2 = Terrible (major errors or misunderstandings)
-    3 = Bad (significant issues or gaps)
-    4 = Worse than average (some issues, below acceptable)
-    5 = Mediocre (acceptable but unremarkable)
-    6 = Better than average (decent with room for improvement)
-    7 = Decent (solid response with minor flaws)
-    8 = Good (well-crafted, thorough response)
-    9 = Excellent (exceptional quality and insight)
-    10 = Perfect (flawless, comprehensive, and insightful)""",
+                "description": """Submit a score for the LLM response. On a scale of 1 to 10. 1 means terrible, 5 means mediocre, and 10 means perfect.""",
+                "strict": True,
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "score": {
+                            "type": "integer",
+                            "description": f"Score from 1-{scale} ({scale} being best)",
+                            "minimum": 1,
+                            "maximum": scale
+                        },
+                        "explanation": {
+                            "type": "string",
+                            "description": "Detailed explanation for the score"
+                        }
+                    },
+                    "required": ["score", "explanation"]
+                }
+            }
+        ]
+    elif reasoning == "before":
+        functions = [
+            {
+                "name": "submit_score",
+                "description": "Submit a score for the LLM response. On a scale of 1 to 10. 1 means terrible, 5 means mediocre, and 10 means perfect.",
+                "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -73,9 +98,9 @@ def judge_response(
                             "description": f"Score from 1-{scale} ({scale} being best)",
                             "minimum": 1,
                             "maximum": scale
-                        },
+                        }
                     },
-                    "required": ["score", "explanation"]
+                    "required": ["explanation", "score"]
                 }
             }
         ]
@@ -83,7 +108,7 @@ def judge_response(
         functions = [
             {
                 "name": "submit_score",
-                "description": """Submit a score for the LLM response. On a scale of 1 to 10. 1 means extremely terrible, 5 means mediocre, and 10 means perfect""",
+                "description": "Submit a score for the LLM response. On a scale of 1 to 10. 1 means terrible, 5 means mediocre, and 10 means perfect.",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -100,20 +125,45 @@ def judge_response(
         ]
 
     # Construct the prompt based on reasoning parameter
-    if reasoning:
-        prompt = f"""You are an expert judge evaluating AI responses. First, provide your detailed reasoning about the response's quality, then give a score from 1-{scale}.
+    if reasoning == "before":
+        prompt = f"""[System]
+Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below. Let's think step by step about the response's quality.
 
-Response to evaluate:
+[Question]
+{question}
+
+[The Start of Assistant's Answer]
 {response}
+[The End of Assistant's Answer]
 
-Please think step by step about the response's strengths and weaknesses before providing your score."""
+Please think step by step about the response's strengths and weaknesses before providing your score. On a scale of 1 to 10. 1 means terrible, 5 means mediocre, and 10 means perfect."""
+
+    elif reasoning == "after":
+        prompt = f"""[System]
+Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below.
+
+[Question]
+{question}
+
+[The Start of Assistant's Answer]
+{response}
+[The End of Assistant's Answer]
+
+First provide a score from 1-{scale}, then explain your reasoning step by step. 1 means terrible, 5 means mediocre, and 10 means perfect."""
+
     else:
-        prompt = f"""You are an expert judge evaluating AI responses. Please evaluate the following response on a scale from 1-{scale}.
+        prompt = f"""[System]
+Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below. Please evaluate the following response on a scale from 1-{scale}.
+1 means terrible, 5 means mediocre, and 10 means perfect.
 
-Response to evaluate:
+[Question]
+{question}
+
+[The Start of Assistant's Answer]
 {response}
+[The End of Assistant's Answer]
 
-Please provide only a score, with no explanation."""
+Please provide only a score, with no explanation.  1 means terrible, 5 means mediocre, and 10 means perfect."""
 
     try:
         completion = client.chat.completions.create(
@@ -136,40 +186,36 @@ Please provide only a score, with no explanation."""
                 results.append({
                     "score": result["score"],
                     "explanation": result.get("explanation", "No explanation requested"),
-                    "success": True
+                    "success": True,
+                    "raw_prompt": prompt,
+                    "raw_response": choice.message.model_dump_json()
                 })
             except json.JSONDecodeError as e:
                 results.append({
                     "score": None,
                     "explanation": f"Failed to parse function call response: {str(e)}",
-                    "success": False
+                    "success": False,
+                    "raw_prompt": prompt,
+                    "raw_response": choice.message.model_dump_json() if choice.message else "No response"
                 })
             except Exception as e:
                 results.append({
                     "score": None,
-                    "explanation": f"Unexpected error processing choice: {str(e)}",
-                    "success": False
+                    "explanation": f"Unexpected error: {str(e)}",
+                    "success": False,
+                    "raw_prompt": prompt,
+                    "raw_response": choice.message.model_dump_json() if choice.message else "No response"
                 })
 
         return results
 
-    except openai.RateLimitError as e:
-        return [{
-            "score": None,
-            "explanation": f"Rate limit exceeded: {str(e)}",
-            "success": False
-        }]
-    except openai.APIError as e:
-        return [{
-            "score": None,
-            "explanation": f"OpenAI API error: {str(e)}",
-            "success": False
-        }]
     except Exception as e:
         return [{
             "score": None,
             "explanation": f"Unexpected error: {str(e)}",
-            "success": False
+            "success": False,
+            "raw_prompt": prompt,
+            "raw_response": "Error: No response received"
         }]
 
 
@@ -178,73 +224,122 @@ async def evaluate_all_responses(
     scale: int = 10,
     num_trials: int = 10,
     temperature: float = 0.5,
-    cutoff: int = 80
+    cutoff: int = 80,
+    reasoning: bool = False,
+    example_folder: Path = Path("./examples"),
+    prefix: str = None
 ) -> List[float]:
+    """Evaluate responses using a judge model
+
+    Args:
+        judge_model: Model to use as judge
+        scale: Rating scale
+        num_trials: Number of trials per response
+        temperature: Sampling temperature
+        cutoff: Maximum number of responses to evaluate
+        reasoning: Whether to include reasoning
+        example_folder: Folder to save example judgements
+        prefix: Prefix for example judgements file (defaults to {model_name}_{temperature})
+    """
+    # Set default prefix if none provided
+    if prefix is None:
+        prefix = f"{judge_model}_{temperature}"
+
+    # Create example folder if it doesn't exist
+    example_folder.mkdir(parents=True, exist_ok=True)
+    example_judgements = []
+
+    # Load questions
+    questions = {}
+    with open("data/mt_bench/question.jsonl", "r") as f:
+        for line in f:
+            q = json.loads(line)
+            # Get first turn question
+            questions[q["question_id"]] = q["turns"][0]
+
     file_path = Path("data/mt_bench/model_answer/gpt-4.jsonl")
     variances = []
     failed_responses = []
-    
+
     # Count total lines first (up to cutoff)
     total_lines = sum(1 for _ in open(file_path) if _ is not None)
     total_lines = min(cutoff, total_lines)
-    
+
     with open(file_path, 'r') as f:
-        # Create progress bar for responses
-        pbar = tqdm(total=total_lines, desc=f"Evaluating responses with {judge_model}")
-        
+        pbar = tqdm(total=total_lines,
+                    desc=f"Evaluating responses with {judge_model}")
+
         for line_num, line in enumerate(f, 1):
             if line_num > cutoff:
                 break
-                
+
             try:
                 data = json.loads(line)
-                # Validate data structure
-                if not isinstance(data, dict) or 'choices' not in data or not data['choices']:
-                    raise ValueError("Invalid response data structure")
-                if 'turns' not in data['choices'][0] or not data['choices'][0]['turns']:
-                    raise ValueError("Invalid turns data structure")
-                
-                response = data['choices'][0]['turns'][0]
-                
-                # Judge response multiple times
+                question_id = data["question_id"]
+                question = questions.get(question_id)
+                if not question:
+                    raise ValueError(f"No question found for ID {question_id}")
+
+                response = data["choices"][0]["turns"][0]
+
+                # Judge response
                 results = judge_response(
-                    response,
-                    reasoning=False,
+                    response=response,
+                    question=question,
+                    reasoning=reasoning,
                     scale=scale,
                     temperature=temperature,
                     judge=judge_model,
                     num_trials=num_trials
                 )
-                
-                successful_trials = sum(1 for result in results if result['success'])
-                
+
+                # Save first 5 examples
+                if example_judgements is not None and len(example_judgements) < 5:
+                    example_judgements.append({
+                        # Save prompt from first trial
+                        "raw_prompt": results[0]["raw_prompt"],
+                        "raw_responses": [r["raw_response"] for r in results]
+                    })
+                elif example_judgements is not None:
+                    example_file = example_folder / \
+                        f"{prefix}_example_judgements.json"
+                    with open(example_file, "w") as f:
+                        json.dump(example_judgements, f, indent=2)
+                    example_judgements = None
+
+                successful_trials = sum(
+                    1 for result in results if result['success'])
+
                 # Calculate variance if we have any successful results
-                scores = [result['score'] for result in results if result['success']]
+                scores = [result['score']
+                          for result in results if result['success']]
                 if scores:
                     avg_score = sum(scores) / len(scores)
-                    variance = sum((s - avg_score) ** 2 for s in scores) / len(scores)
+                    variance = sum((s - avg_score) **
+                                   2 for s in scores) / len(scores)
                     variances.append(variance)
-                    pbar.set_postfix({'variance': f"{variance:.4f}", 'trials': f"{successful_trials}/{num_trials}"})
+                    pbar.set_postfix(
+                        {'variance': f"{variance:.4f}", 'trials': f"{successful_trials}/{num_trials}"})
                 else:
                     failed_responses.append(line_num)
                     pbar.set_postfix({'status': 'failed'})
-                
-                
+
             except json.JSONDecodeError as e:
                 failed_responses.append(line_num)
                 pbar.set_postfix({'error': 'JSON parse error'})
             except ValueError as e:
                 failed_responses.append(line_num)
-                pbar.set_postfix({'error': 'Invalid data structure'})
+                pbar.set_postfix({'error': str(e)[:20]})
             except Exception as e:
                 failed_responses.append(line_num)
-                pbar.set_postfix({'error': str(e)[:20]})  # Show first 20 chars of error
-            
+                pbar.set_postfix({'error': str(e)[:20]})
+
             pbar.update(1)
-        
+
         pbar.close()
-    
+
     if not variances:
-        raise RuntimeError(f"No successful evaluations completed with judge {judge_model}. Failed responses: {failed_responses}")
-    
+        raise RuntimeError(
+            f"No successful evaluations completed with judge {judge_model}. Failed responses: {failed_responses}")
+
     return variances
