@@ -6,6 +6,7 @@ from enum import Enum
 import json
 from datasets import load_dataset
 from tqdm import tqdm
+from typing import List
 
 load_dotenv()
 client = OpenAI()
@@ -58,17 +59,17 @@ def load_dataset_human_preference() -> Path:
     return output_path
 
 
-def evaluate_on_human_preferences(comparison_function, cutoff: int = None) -> float:
+def evaluate_on_human_preferences_batch(comparison_functions: List[callable], cutoff: int = None) -> List[float]:
     """
-    Evaluate a comparison function against human preferences from MT-bench.
+    Evaluate multiple comparison functions against the same set of human preferences from MT-bench.
 
     Args:
-        comparison_function: Function that takes conversation_a and conversation_b and returns
-                           "model_a", "model_b", or "tie"
+        comparison_functions: List of functions that each take conversation_a and conversation_b 
+                            and return "model_a", "model_b", or "tie"
         cutoff: Number of examples to evaluate (None for all examples)
 
     Returns:
-        float: Accuracy score where ties count as 0.5 if they match with a model choice
+        List[float]: List of accuracy scores where ties count as 0.5 if they match with a model choice
     """
     load_dataset_human_preference()
 
@@ -80,28 +81,30 @@ def evaluate_on_human_preferences(comparison_function, cutoff: int = None) -> fl
         import random
         judgments = random.sample(judgments, min(cutoff, len(judgments)))
 
-    total_score = 0
+    scores = [0] * len(comparison_functions)
 
     # Create progress bar
     for item in tqdm(judgments, desc="Evaluating responses"):
-        # Get model prediction
-        pred = comparison_function(
-            item['conversation_a'], item['conversation_b'], item['turn'])
-
         # Get human judgment
         truth = item['winner']
 
-        # Calculate score
-        if pred == truth:
-            # Direct match
-            total_score += 1
-        elif "tie" in [pred, truth]:
-            total_score += 0.5
+        # Evaluate each comparison function on the same item
+        for i, comparison_function in enumerate(comparison_functions):
+            # Get model prediction
+            pred = comparison_function(
+                item['conversation_a'], item['conversation_b'], item['turn'])
 
-    # Calculate accuracy
-    accuracy = total_score / len(judgments)
+            # Calculate score
+            if pred == truth:
+                # Direct match
+                scores[i] += 1
+            elif "tie" in [pred, truth]:
+                scores[i] += 0.5
 
-    return accuracy
+    # Calculate accuracies
+    accuracies = [score / len(judgments) for score in scores]
+
+    return accuracies
 
 
 def pairwise_comparison(conversation_a, conversation_b, turn: int) -> str:
@@ -173,7 +176,7 @@ the assistants. Be as objective as possible.
 
         # Get response from OpenAI with function calling
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
             functions=functions,
             function_call={"name": "submit_verdict"},
@@ -213,20 +216,32 @@ def grade_then_compare(grading_function):
         answer_a = conversation_a[msg_idx + 1]['content']
         answer_b = conversation_b[msg_idx + 1]['content']
 
-        # Grade both responses
-        score_a = grading_function(question, answer_a)['score']
-        score_b = grading_function(question, answer_b)['score']
+        try:
+            # Grade both responses
+            result_a = grading_function(question, answer_a)
+            result_b = grading_function(question, answer_b)
 
-        # Compare scores with a small threshold for ties
-        if abs(score_a - score_b) < 0.01:
-            return Verdict.TIE.value
-        elif score_a > score_b:
-            return Verdict.MODEL_A.value
-        else:
-            return Verdict.MODEL_B.value
+            # Check if grading was successful
+            if not result_a.get('success') or not result_b.get('success'):
+                return Verdict.TIE.value
+
+            score_a = result_a.get('score')
+            score_b = result_b.get('score')
+
+            # Check if we got valid scores
+            if score_a is None or score_b is None:
+                return Verdict.TIE.value
+
+            # Compare scores with a small threshold for ties
+            if abs(score_a - score_b) < 0.01:
+                return Verdict.TIE.value
+            elif score_a > score_b:
+                return Verdict.MODEL_A.value
+            else:
+                return Verdict.MODEL_B.value
+
+        except Exception as e:
+            print(f"Error in comparison: {str(e)}")
+            return Verdict.TIE.value  # Default to tie in case of errors
 
     return comparison_function
-
-
-print(evaluate_on_human_preferences(
-    comparison_function=pairwise_comparison, cutoff=10))
