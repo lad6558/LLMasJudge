@@ -62,7 +62,6 @@ def judge_response(
             {
                 "name": "submit_score",
                 "description": "Submit a score and explanation for the LLM response",
-                "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -86,7 +85,6 @@ def judge_response(
             {
                 "name": "submit_score",
                 "description": "Submit a score and explanation for the LLM response",
-                "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {

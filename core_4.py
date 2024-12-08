@@ -6,7 +6,7 @@ from enum import Enum
 import json
 from datasets import load_dataset
 from tqdm import tqdm
-from typing import List
+from typing import List, Dict
 
 load_dotenv()
 client = OpenAI()
@@ -59,7 +59,7 @@ def load_dataset_human_preference() -> Path:
     return output_path
 
 
-def evaluate_on_human_preferences_batch(comparison_functions: List[callable], cutoff: int = None) -> List[float]:
+def evaluate_on_human_preferences_batch(comparison_functions: List[callable], cutoff: int = None) -> Dict:
     """
     Evaluate multiple comparison functions against the same set of human preferences from MT-bench.
 
@@ -69,12 +69,15 @@ def evaluate_on_human_preferences_batch(comparison_functions: List[callable], cu
         cutoff: Number of examples to evaluate (None for all examples)
 
     Returns:
-        List[float]: List of accuracy scores where ties count as 0.5 if they match with a model choice
+        Dict: Contains 'accuracies' (final scores) and 'intermediate_scores' (per-example scores)
     """
     load_dataset_human_preference()
 
     with open("data/mt_bench_human_judgments.json", 'r') as f:
         judgments = json.load(f)
+
+    # Filter for turn=1 conversations only
+    judgments = [j for j in judgments if j['turn'] == 1]
 
     # Randomly sample if cutoff is specified
     if cutoff is not None:
@@ -82,6 +85,8 @@ def evaluate_on_human_preferences_batch(comparison_functions: List[callable], cu
         judgments = random.sample(judgments, min(cutoff, len(judgments)))
 
     scores = [0] * len(comparison_functions)
+    # Store intermediate scores for each comparison function
+    intermediate_scores = [[] for _ in comparison_functions]
 
     # Create progress bar
     for item in tqdm(judgments, desc="Evaluating responses"):
@@ -97,14 +102,23 @@ def evaluate_on_human_preferences_batch(comparison_functions: List[callable], cu
             # Calculate score
             if pred == truth:
                 # Direct match
-                scores[i] += 1
+                score = 1
             elif "tie" in [pred, truth]:
-                scores[i] += 0.5
+                score = 0.5
+            else:
+                score = 0
+                
+            scores[i] += score
+            intermediate_scores[i].append(score)
 
     # Calculate accuracies
     accuracies = [score / len(judgments) for score in scores]
 
-    return accuracies
+    return {
+        'accuracies': accuracies,
+        'intermediate_scores': intermediate_scores,
+        'num_examples': len(judgments)
+    }
 
 
 def pairwise_comparison(conversation_a, conversation_b, turn: int) -> str:

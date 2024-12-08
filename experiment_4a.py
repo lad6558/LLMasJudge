@@ -98,10 +98,14 @@ def run_temperature_experiment(cutoff: int = 100):
     comparison_functions.append(random_choice)
 
     # Evaluate all functions on the same set of examples
-    accuracies = evaluate_on_human_preferences_batch(
+    results = evaluate_on_human_preferences_batch(
         comparison_functions, cutoff=cutoff)
 
-    # Split results
+    accuracies = results['accuracies']
+    intermediate_scores = results['intermediate_scores']
+    num_examples = results['num_examples']
+
+    # Split results (accuracies)
     baseline_accuracy = accuracies[0]  # Pairwise with reasoning
     # Pairwise without reasoning
     pairwise_no_reasoning_accuracy = accuracies[1]
@@ -164,12 +168,13 @@ def run_temperature_experiment(cutoff: int = 100):
     plt.savefig(exp_dir / 'method_comparison.png')
     plt.close()
 
-    # Save combined results
+    # Save combined results with intermediate scores
     combined_results = {
         "experiment": "4a",
         "description": "Testing temperature effects on human preference alignment",
         "parameters": {
             "cutoff": cutoff,
+            "num_examples": num_examples
         },
         "results": {
             "baseline_accuracy": baseline_accuracy,
@@ -183,6 +188,27 @@ def run_temperature_experiment(cutoff: int = 100):
             "method_comparison": {
                 method: acc for method, acc in zip(methods, temp_05_accuracies)
             }
+        },
+        "intermediate_scores": {
+            "pairwise_baseline": intermediate_scores[0],
+            "pairwise_no_reasoning": intermediate_scores[1],
+            "no_reasoning_temps": {
+                f"temp_{temp:.1f}": scores
+                for temp, scores in zip(temperatures, intermediate_scores[2:13])
+            },
+            "with_reasoning_temps": {
+                f"temp_{temp:.1f}": scores
+                for temp, scores in zip(temperatures, intermediate_scores[13:24])
+            },
+            "additional_methods": {
+                "gpt4o_mini_basic": intermediate_scores[24],
+                "gpt4o_mini_reasoning": intermediate_scores[25],
+                "gpt4o_mini_reasoning_after": intermediate_scores[26],
+                "gpt4o_mini_10trials": intermediate_scores[27],
+                "gpt4o_mini_reference": intermediate_scores[28],
+                "always_tie": intermediate_scores[29],
+                "random": intermediate_scores[30]
+            }
         }
     }
 
@@ -194,4 +220,4 @@ def run_temperature_experiment(cutoff: int = 100):
 
 
 if __name__ == "__main__":
-    results = run_temperature_experiment(cutoff=100)
+    results = run_temperature_experiment(cutoff=3)
