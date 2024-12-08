@@ -129,8 +129,8 @@ def main():
                         help='Number of times to judge each response (default: 10)')
     parser.add_argument('--scale', type=int, default=10,
                         help='Maximum score value (default: 10)')
-    parser.add_argument('--cutoff', type=int, default=10,
-                        help='Maximum number of responses to evaluate (default: 10)')
+    parser.add_argument('--cutoff', type=int, default=80,
+                        help='Maximum number of responses to evaluate (default: 80)')
 
     args = parser.parse_args()
 
