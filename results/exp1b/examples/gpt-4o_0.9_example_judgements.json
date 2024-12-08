@@ -19,13 +19,13 @@
     "raw_responses": [
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
+      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":10}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
-      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
-      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
+      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":10}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}"
     ]
   },
@@ -54,7 +54,7 @@
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
-      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
+      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":8}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}"
     ]
@@ -67,11 +67,11 @@
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
+      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":8}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
       "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
-      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}",
-      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":10}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}"
+      "{\"content\":null,\"role\":\"assistant\",\"function_call\":{\"arguments\":\"{\\\"score\\\":9}\",\"name\":\"submit_score\"},\"tool_calls\":null,\"refusal\":null}"
     ]
   }
 ]
