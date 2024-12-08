@@ -1,4 +1,4 @@
-from core_4 import evaluate_on_human_preferences_batch, grade_then_compare, pairwise_comparison
+from core_4 import evaluate_on_human_preferences_batch, grade_then_compare, pairwise_comparison, pairwise_comparison_no_reasoning
 from core import judge_response
 import numpy as np
 from typing import Dict, List
@@ -6,8 +6,21 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import json
 
+REFERENCE = """[Grading Reference]
+1.  Flow: Completely disjointed; sentences and paragraphs lack any logical connection. Wording: Full of grammar, spelling, and syntax errors; sentences are nearly incomprehensible. Creativity: No originality or thought; entirely derivative or nonsensical.
+2.  Flow: Very poor; minimal coherence between ideas with abrupt transitions. Wording: Numerous errors that impede understanding; very simplistic or awkward phrasing. Creativity: Little effort to present unique ideas; lacks engagement or depth.
+3.  Flow: Some logical connections, but the organization is weak and hard to follow. Wording: Frequent errors; limited vocabulary and repetitive language. Creativity: Lacks originality; relies heavily on clichés or predictable ideas.
+4.  Flow: Ideas are somewhat connected, but transitions feel forced or confusing. Wording: Noticeable errors and awkward phrasing; attempts at varied vocabulary fall flat. Creativity: Minimal effort to add originality; occasionally bland or uninspired.
+5.  Flow: Adequate structure; some logical progression but with occasional lapses. Wording: Correct but basic; limited variety in sentence structure and vocabulary. Creativity: Meets expectations but does not stand out; lacks memorable elements.
+6. Flow: Clear organization with minor hiccups; transitions are functional. Wording: Generally effective with few errors; some variety in language and sentence structure. Creativity: Shows occasional sparks of originality; somewhat engaging.
+7. Flow: Smooth and logical progression; ideas are well-connected. Wording: Effective and mostly polished; good vocabulary and sentence variety. Creativity: Demonstrates thoughtful and engaging ideas with some unique touches.
+8. Flow: Seamless and cohesive; transitions enhance readability. Wording: Precise and polished with diverse sentence structures and vocabulary. Creativity: Fresh and imaginative ideas; captures the reader's interest.
+9. Flow: Flawless and engaging; ideas are intricately woven together. Wording: Highly refined and sophisticated; rich vocabulary used effectively. Creativity: Original and compelling; leaves a lasting impression on the reader.
+10. Flow: Perfectly seamless; every sentence and paragraph feels purposeful and natural. Wording: Masterful use of language; evocative and impactful. Creativity: Exceptionally innovative and inspiring; a true standout piece.,
+"""
 
-def create_grading_function(temperature: float, reasoning: str = None, num_trials: int = 1, judge: str = "gpt-4o-mini"):
+
+def create_grading_function(temperature: float, reasoning: str = None, num_trials: int = 1, judge: str = "gpt-4o-mini", reference: str = ""):
     """Creates a grading function with fixed temperature and reasoning setting"""
     def grade(question: str, response: str) -> Dict:
         results = judge_response(
@@ -16,7 +29,8 @@ def create_grading_function(temperature: float, reasoning: str = None, num_trial
             temperature=temperature,
             judge=judge,
             reasoning=reasoning,
-            num_trials=num_trials
+            num_trials=num_trials,
+            reference=reference
         )
         return results[0]  # Return first (and only) result
     return grade
@@ -34,8 +48,10 @@ def run_temperature_experiment(cutoff: int = 100):
     temperatures = np.arange(0, 1.1, 0.1)  # 0.0 to 1.0 in steps of 0.1
     comparison_functions = []
 
-    # Add baseline pairwise comparison as first function
-    comparison_functions.append(pairwise_comparison)
+    # Add baseline pairwise comparison (with and without reasoning)
+    comparison_functions.append(pairwise_comparison)  # with reasoning
+    comparison_functions.append(
+        pairwise_comparison_no_reasoning)  # without reasoning
 
     # Add temperature-based comparison functions without reasoning
     for temp in temperatures:
@@ -66,29 +82,34 @@ def run_temperature_experiment(cutoff: int = 100):
     grader = create_grading_function(temperature=0.5, num_trials=10)
     comparison_functions.append(grade_then_compare(grader))
 
-    # GPT-4o-mini with reasoning before and 10 trials
-    grader = create_grading_function(
-        temperature=0.5, reasoning="before", num_trials=10)
+    # GPT-4o-mini with reference
+    grader = create_grading_function(temperature=0.5, reference=REFERENCE)
     comparison_functions.append(grade_then_compare(grader))
 
-    # GPT-4o pointwise
-    grader = create_grading_function(temperature=0.5, judge="gpt-4o")
-    comparison_functions.append(grade_then_compare(grader))
+    # Add always-tie baseline
+    def always_tie(conversation_a, conversation_b, turn: int) -> str:
+        return "tie"
+    comparison_functions.append(always_tie)
 
-    # GPT-3.5-turbo with reasoning before and 10 trials
-    grader = create_grading_function(temperature=0.5, reasoning="before",
-                                     num_trials=10, judge="gpt-3.5-turbo")
-    comparison_functions.append(grade_then_compare(grader))
+    # Add random baseline
+    def random_choice(conversation_a, conversation_b, turn: int) -> str:
+        import random
+        return random.choice(["model_a", "model_b", "tie"])
+    comparison_functions.append(random_choice)
 
     # Evaluate all functions on the same set of examples
     accuracies = evaluate_on_human_preferences_batch(
         comparison_functions, cutoff=cutoff)
 
     # Split results
-    baseline_accuracy = accuracies[0]
-    no_reasoning_accuracies = accuracies[1:12]  # Next 11 results
-    with_reasoning_accuracies = accuracies[12:23]  # Next 11 results
-    additional_accuracies = accuracies[23:]  # Last 7 results
+    baseline_accuracy = accuracies[0]  # Pairwise with reasoning
+    # Pairwise without reasoning
+    pairwise_no_reasoning_accuracy = accuracies[1]
+    no_reasoning_accuracies = accuracies[2:13]  # Next 11 results
+    with_reasoning_accuracies = accuracies[13:24]  # Next 11 results
+    additional_accuracies = accuracies[24:29]  # Next 5 results
+    always_tie_accuracy = accuracies[29]  # Always-tie baseline
+    random_accuracy = accuracies[30]  # Random baseline
 
     # Create temperature vs accuracy plot
     plt.figure(figsize=(10, 6))
@@ -111,25 +132,27 @@ def run_temperature_experiment(cutoff: int = 100):
 
     # Prepare data for bar plot
     methods = [
+        'Always\ntie',
+        'Random\nchoice',
         'Pairwise\nbaseline',
+        'Pairwise\nno reasoning',
         'GPT-4o-mini\nbasic',
         'GPT-4o-mini\nw/reasoning',
         'GPT-4o-mini\nw/reasoning after',
         'GPT-4o-mini\n10 trials',
-        'GPT-4o-mini\nw/reasoning\n10 trials',
-        'GPT-4o\nbasic',
-        'GPT-3.5-turbo\nw/reasoning\n10 trials'
+        'GPT-4o-mini\nw/reference'
     ]
 
     temp_05_accuracies = [
-        baseline_accuracy,  # Pairwise baseline
+        always_tie_accuracy,  # Always-tie baseline
+        random_accuracy,  # Random baseline
+        baseline_accuracy,  # Pairwise baseline with reasoning
+        pairwise_no_reasoning_accuracy,  # Pairwise baseline without reasoning
         additional_accuracies[0],  # GPT-4o-mini basic
         additional_accuracies[1],  # GPT-4o-mini w/reasoning
         additional_accuracies[2],  # GPT-4o-mini w/reasoning after
         additional_accuracies[3],  # GPT-4o-mini 10 trials
-        additional_accuracies[4],  # GPT-4o-mini w/reasoning 10 trials
-        additional_accuracies[5],  # GPT-4o basic
-        additional_accuracies[6],  # GPT-3.5-turbo w/reasoning 10 trials
+        additional_accuracies[4],  # GPT-4o-mini w/reference
     ]
 
     plt.bar(methods, temp_05_accuracies)
@@ -171,4 +194,4 @@ def run_temperature_experiment(cutoff: int = 100):
 
 
 if __name__ == "__main__":
-    results = run_temperature_experiment(cutoff=10)
+    results = run_temperature_experiment(cutoff=100)

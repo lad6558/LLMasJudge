@@ -49,7 +49,7 @@ def load_dataset_human_preference() -> Path:
             'conversation_b': item['conversation_b'],
             'turn': item['turn']
         }
-        for item in dataset['human']
+        for item in dataset['human'] if item['turn'] == 1
     ]
 
     # Save as JSON with indentation
@@ -170,6 +170,86 @@ the assistants. Be as objective as possible.
                         },
                     },
                     "required": ["explanation", "verdict"]
+                }
+            }
+        ]
+
+        # Get response from OpenAI with function calling
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            functions=functions,
+            function_call={"name": "submit_verdict"},
+            temperature=0.5,
+        )
+
+        # Extract the function call
+        function_call = response.choices[0].message.function_call
+
+        # Parse the response
+        import json
+        result = json.loads(function_call.arguments)
+
+        return result["verdict"]
+
+    except Exception as e:
+        print(f"Error in comparison: {str(e)}")
+        return Verdict.TIE.value  # Default to tie in case of errors
+
+
+def pairwise_comparison_no_reasoning(conversation_a, conversation_b, turn: int) -> str:
+    """
+    Compare two conversations without step-by-step reasoning.
+
+    Args:
+        conversation_a: List of message dictionaries for first conversation
+        conversation_b: List of message dictionaries for second conversation
+        turn: Which turn in the conversation to evaluate (1-based index)
+
+    Returns:
+        str: "model_a", "model_b", or "tie"
+    """
+    # Calculate the message index for the turn (2 messages per turn: user + assistant)
+    msg_idx = (turn - 1) * 2
+
+    # Extract the question and answers from the specific turn
+    question = conversation_a[msg_idx]['content']
+    answer_a = conversation_a[msg_idx + 1]['content']
+    answer_b = conversation_b[msg_idx + 1]['content']
+
+    # Construct the prompt
+    prompt = f"""[System]
+Please act as an impartial judge and evaluate which of the two AI responses better answers the user's question.
+Choose the response that is more helpful, relevant, accurate, and detailed. Make your choice without explanation.
+Do not let length influence your decision. Be as objective as possible.
+
+[User Question]
+{question}
+
+[The Start of Assistant A's Answer]
+{answer_a}
+[The End of Assistant A's Answer]
+
+[The Start of Assistant B's Answer]
+{answer_b}
+[The End of Assistant B's Answer]"""
+
+    try:
+        # Define the function schema
+        functions = [
+            {
+                "name": "submit_verdict",
+                "description": "Submit a verdict about which response was better",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "verdict": {
+                            "type": "string",
+                            "enum": [v.value for v in Verdict],
+                            "description": "The verdict of which response was better"
+                        },
+                    },
+                    "required": ["verdict"]
                 }
             }
         ]

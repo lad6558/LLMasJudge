@@ -31,7 +31,8 @@ def judge_response(
     scale: int = 10,
     temperature: float = 0.5,
     judge: str = "gpt-4o-mini",  # gpt-4o-mini is a valid model
-    num_trials: int = 1
+    num_trials: int = 1,
+    reference: str = ""
 ) -> List[Dict]:
     """
     Judge a response given its question context
@@ -129,6 +130,8 @@ def judge_response(
         prompt = f"""[System]
 Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below. Let's think step by step about the response's quality.
 
+{reference}
+
 [Question]
 {question}
 
@@ -142,6 +145,8 @@ Please think step by step about the response's strengths and weaknesses before p
         prompt = f"""[System]
 Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below.
 
+{reference}
+
 [Question]
 {question}
 
@@ -154,6 +159,8 @@ First provide a score from 1-{scale}, then explain your reasoning step by step."
     else:
         prompt = f"""[System]
 Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below. Please evaluate the following response on a scale from 1-{scale}.
+
+{reference}
 
 [Question]
 {question}
