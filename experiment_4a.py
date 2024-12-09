@@ -33,7 +33,8 @@ def create_grading_function(temperature: float, reasoning: str = None, num_trial
             reference=reference
         )
         # Average the scores if multiple trials
-        avg_score = sum(r.get('score', 0) for r in results if r['score'] is not None) / len(results)
+        avg_score = sum(r.get('score', 0)
+                        for r in results if r['score'] is not None) / len(results)
         # Return first result but with averaged score
         result = results[0].copy()
         result['score'] = avg_score
@@ -226,4 +227,4 @@ def run_temperature_experiment(cutoff: int = 100):
 
 
 if __name__ == "__main__":
-    results = run_temperature_experiment(cutoff=100)
+    results = run_temperature_experiment(cutoff=1000)
