@@ -19,7 +19,8 @@ async def evaluate_responses(
     exp_dir: Path
 ) -> list[list[int]]:
     """
-    Evaluate responses using a judge model, returning scores for each response
+    Evaluate responses using a judge model, returning scores for each response.
+    Includes reasoning before scoring.
     """
     # Load questions
     questions = {}
@@ -53,11 +54,11 @@ async def evaluate_responses(
 
                 response = data["choices"][0]["turns"][0]
 
-                # Judge response
+                # Judge response - modified to include reasoning
                 results = judge_response(
                     response=response,
                     question=question,
-                    reasoning=False,
+                    reasoning="before",  # Added reasoning parameter
                     scale=scale,
                     temperature=temperature,
                     judge=judge_model,
@@ -93,19 +94,20 @@ async def evaluate_responses(
 
 async def run_experiment(num_trials: int = 100, scale: int = 10, cutoff: int = 30):
     """
-    Run experiment 1c: Testing model size vs scoring distribution
+    Run experiment 1c with reasoning: Testing model size vs scoring distribution
     
     This experiment:
     1. Uses GPT-3.5-turbo, GPT-4o-mini, and GPT-4o to score responses
     2. Tests temperatures 0.3, 0.5, and 1.0
     3. Collects score distributions across multiple responses and trials
+    4. Includes reasoning before scoring
     """
     # Ensure results directory exists
     results_dir = Path("results")
     results_dir.mkdir(exist_ok=True)
 
-    # Create exp1c subdirectory
-    exp_dir = results_dir / "exp1c"
+    # Create exp1c_reasoning subdirectory
+    exp_dir = results_dir / "exp1c_reasoning"  # Changed directory name
     exp_dir.mkdir(exist_ok=True)
 
     judge_models = ["gpt-3.5-turbo", "gpt-4o-mini", "gpt-4o"]
@@ -113,12 +115,13 @@ async def run_experiment(num_trials: int = 100, scale: int = 10, cutoff: int = 3
 
     # Store all results for final analysis
     all_results = {
-        "experiment": "1c",
-        "description": "Testing model size vs scoring distribution",
+        "experiment": "1c_reasoning",  # Changed experiment name
+        "description": "Testing model size vs scoring distribution with reasoning",  # Updated description
         "parameters": {
             "scale": scale,
             "num_trials": num_trials,
-            "cutoff": cutoff
+            "cutoff": cutoff,
+            "reasoning": "before"  # Added reasoning parameter
         },
         "results": {}
     }
@@ -158,13 +161,14 @@ async def run_experiment(num_trials: int = 100, scale: int = 10, cutoff: int = 3
                     centered = [score - median_score for score in response_scores]
                     centered_scores.extend(centered)
 
-                # Create distribution plot
+                # Create distribution plot with fixed x-axis limits
                 plt.figure(figsize=(10, 6))
                 sns.histplot(centered_scores, bins=20, kde=True)
-                plt.title(f'Score Distribution for {judge} (temp={temp})')
+                plt.title(f'Score Distribution for {judge} with Reasoning (temp={temp})')
                 plt.xlabel('Centered Scores')
                 plt.ylabel('Frequency')
-                plt.savefig(exp_dir / f'distribution_{judge}_{str(temp).replace(".", "_")}.png')
+                plt.xlim(-3, 3)  # Fixed x-axis limits
+                plt.savefig(exp_dir / f'distribution_reasoning_{judge}_{str(temp).replace(".", "_")}.png')
                 plt.close()
 
                 # Store results for this temperature and model
@@ -176,7 +180,7 @@ async def run_experiment(num_trials: int = 100, scale: int = 10, cutoff: int = 3
 
                 # Save individual results file
                 model_file = exp_dir / \
-                    f"{judge.replace('-', '_')}_temp_{str(temp).replace('.', '_')}.json"
+                    f"reasoning_{judge.replace('-', '_')}_temp_{str(temp).replace('.', '_')}.json"
                 with open(model_file, 'w') as f:
                     json.dump({
                         "judge_model": judge,
@@ -206,7 +210,7 @@ async def run_experiment(num_trials: int = 100, scale: int = 10, cutoff: int = 3
     temp_pbar.close()
 
     # Save combined results
-    combined_file = exp_dir / "combined_results.json"
+    combined_file = exp_dir / "combined_results_reasoning.json"
     with open(combined_file, 'w') as f:
         json.dump(all_results, f, indent=2)
     print(f"\nAll results saved to {combined_file}")
@@ -214,7 +218,7 @@ async def run_experiment(num_trials: int = 100, scale: int = 10, cutoff: int = 3
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Run experiment 1c: Testing model size vs scoring distribution')
+        description='Run experiment 1c with reasoning: Testing model size vs scoring distribution')
     parser.add_argument('--num-trials', type=int, default=100,
                        help='Number of times to judge each response (default: 100)')
     parser.add_argument('--scale', type=int, default=10,

@@ -32,7 +32,12 @@ def create_grading_function(temperature: float, reasoning: str = None, num_trial
             num_trials=num_trials,
             reference=reference
         )
-        return results[0]  # Return first (and only) result
+        # Average the scores if multiple trials
+        avg_score = sum(r.get('score', 0) for r in results if r['score'] is not None) / len(results)
+        # Return first result but with averaged score
+        result = results[0].copy()
+        result['score'] = avg_score
+        return result
     return grade
 
 
