@@ -45,7 +45,7 @@ def run_temperature_experiment(cutoff: int = 100):
     exp_dir.mkdir(exist_ok=True)
 
     # Create list of comparison functions for each temperature
-    temperatures = np.arange(0, 1.1, 0.1)  # 0.0 to 1.0 in steps of 0.1
+    temperatures = np.arange(0, 1.1, 0.2)  # 0.0 to 1.0 in steps of 0.2
     comparison_functions = []
 
     # Add baseline pairwise comparison (with and without reasoning)
@@ -109,11 +109,12 @@ def run_temperature_experiment(cutoff: int = 100):
     baseline_accuracy = accuracies[0]  # Pairwise with reasoning
     # Pairwise without reasoning
     pairwise_no_reasoning_accuracy = accuracies[1]
-    no_reasoning_accuracies = accuracies[2:13]  # Next 11 results
-    with_reasoning_accuracies = accuracies[13:24]  # Next 11 results
-    additional_accuracies = accuracies[24:29]  # Next 5 results
-    always_tie_accuracy = accuracies[29]  # Always-tie baseline
-    random_accuracy = accuracies[30]  # Random baseline
+    # Next 6 results (for temps 0.0, 0.2, 0.4, 0.6, 0.8, 1.0)
+    no_reasoning_accuracies = accuracies[2:8]
+    with_reasoning_accuracies = accuracies[8:14]  # Next 6 results
+    additional_accuracies = accuracies[14:19]  # Next 5 results
+    always_tie_accuracy = accuracies[19]  # Always-tie baseline
+    random_accuracy = accuracies[20]  # Random baseline
 
     # Create temperature vs accuracy plot
     plt.figure(figsize=(10, 6))
@@ -180,10 +181,10 @@ def run_temperature_experiment(cutoff: int = 100):
             "baseline_accuracy": baseline_accuracy,
             "temperatures": temperatures.tolist(),
             "no_reasoning": {
-                temp: acc for temp, acc in zip(temperatures, no_reasoning_accuracies)
+                f"{temp:.1f}": acc for temp, acc in zip(temperatures, no_reasoning_accuracies)
             },
             "with_reasoning": {
-                temp: acc for temp, acc in zip(temperatures, with_reasoning_accuracies)
+                f"{temp:.1f}": acc for temp, acc in zip(temperatures, with_reasoning_accuracies)
             },
             "method_comparison": {
                 method: acc for method, acc in zip(methods, temp_05_accuracies)
@@ -194,20 +195,20 @@ def run_temperature_experiment(cutoff: int = 100):
             "pairwise_no_reasoning": intermediate_scores[1],
             "no_reasoning_temps": {
                 f"temp_{temp:.1f}": scores
-                for temp, scores in zip(temperatures, intermediate_scores[2:13])
+                for temp, scores in zip(temperatures, intermediate_scores[2:8])
             },
             "with_reasoning_temps": {
                 f"temp_{temp:.1f}": scores
-                for temp, scores in zip(temperatures, intermediate_scores[13:24])
+                for temp, scores in zip(temperatures, intermediate_scores[8:14])
             },
             "additional_methods": {
-                "gpt4o_mini_basic": intermediate_scores[24],
-                "gpt4o_mini_reasoning": intermediate_scores[25],
-                "gpt4o_mini_reasoning_after": intermediate_scores[26],
-                "gpt4o_mini_10trials": intermediate_scores[27],
-                "gpt4o_mini_reference": intermediate_scores[28],
-                "always_tie": intermediate_scores[29],
-                "random": intermediate_scores[30]
+                "gpt4o_mini_basic": intermediate_scores[14],
+                "gpt4o_mini_reasoning": intermediate_scores[15],
+                "gpt4o_mini_reasoning_after": intermediate_scores[16],
+                "gpt4o_mini_10trials": intermediate_scores[17],
+                "gpt4o_mini_reference": intermediate_scores[18],
+                "always_tie": intermediate_scores[19],
+                "random": intermediate_scores[20]
             }
         }
     }
@@ -220,4 +221,4 @@ def run_temperature_experiment(cutoff: int = 100):
 
 
 if __name__ == "__main__":
-    results = run_temperature_experiment(cutoff=3)
+    results = run_temperature_experiment(cutoff=100)
