@@ -695,3 +695,479 @@ Starting evaluation with judge model: gpt-4o
 Evaluating responses with gpt-4o:  30%|███       | 9/30 [04:53<08:40, 24.79s/it, scores=100/100][A[A
 
 Evaluating responses with gpt-4o:  33%|███▎      | 10/30 [04:53<09:39, 28.97s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  33%|███▎      | 10/30 [05:03<09:39, 28.97s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  37%|███▋      | 11/30 [05:03<07:21, 23.26s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  37%|███▋      | 11/30 [05:21<07:21, 23.26s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  40%|████      | 12/30 [05:21<06:28, 21.60s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  40%|████      | 12/30 [05:43<06:28, 21.60s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  43%|████▎     | 13/30 [05:43<06:08, 21.65s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  43%|████▎     | 13/30 [05:55<06:08, 21.65s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  47%|████▋     | 14/30 [05:55<04:59, 18.71s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  47%|████▋     | 14/30 [06:09<04:59, 18.71s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  50%|█████     | 15/30 [06:09<04:19, 17.27s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  50%|█████     | 15/30 [06:24<04:19, 17.27s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  53%|█████▎    | 16/30 [06:24<03:55, 16.85s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  53%|█████▎    | 16/30 [06:39<03:55, 16.85s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  57%|█████▋    | 17/30 [06:39<03:29, 16.09s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  57%|█████▋    | 17/30 [06:49<03:29, 16.09s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  60%|██████    | 18/30 [06:49<02:51, 14.32s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  60%|██████    | 18/30 [07:20<02:51, 14.32s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  63%|██████▎   | 19/30 [07:20<03:32, 19.32s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  63%|██████▎   | 19/30 [07:34<03:32, 19.32s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  67%|██████▋   | 20/30 [07:34<02:56, 17.61s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  67%|██████▋   | 20/30 [07:39<02:56, 17.61s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  70%|███████   | 21/30 [07:39<02:05, 13.99s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  70%|███████   | 21/30 [07:47<02:05, 13.99s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  73%|███████▎  | 22/30 [07:47<01:37, 12.23s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  73%|███████▎  | 22/30 [08:06<01:37, 12.23s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  77%|███████▋  | 23/30 [08:06<01:39, 14.17s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  77%|███████▋  | 23/30 [08:31<01:39, 14.17s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  80%|████████  | 24/30 [08:31<01:44, 17.34s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  80%|████████  | 24/30 [08:47<01:44, 17.34s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  83%|████████▎ | 25/30 [08:47<01:24, 16.96s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  83%|████████▎ | 25/30 [09:15<01:24, 16.96s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  87%|████████▋ | 26/30 [09:15<01:21, 20.43s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  87%|████████▋ | 26/30 [09:31<01:21, 20.43s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  90%|█████████ | 27/30 [09:31<00:56, 19.00s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  90%|█████████ | 27/30 [09:38<00:56, 19.00s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  93%|█████████▎| 28/30 [09:38<00:31, 15.51s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  93%|█████████▎| 28/30 [10:10<00:31, 15.51s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  97%|█████████▋| 29/30 [10:10<00:20, 20.43s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  97%|█████████▋| 29/30 [10:20<00:20, 20.43s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o: 100%|██████████| 30/30 [10:20<00:00, 17.24s/it, scores=100/100][A[AEvaluating responses with gpt-4o: 100%|██████████| 30/30 [10:20<00:00, 20.68s/it, scores=100/100]
+
+Model gpt-4o: 100%|██████████| 3/3 [19:54<00:00, 455.42s/it][A
+                                                            [ATemperature 0.5:  67%|██████▋   | 2/3 [37:37<19:00, 1140.59s/it]Temperature 1.0:  67%|██████▋   | 2/3 [37:37<19:00, 1140.59s/it]Results saved to results/exp1c_reasoning/reasoning_gpt_4o_temp_0_5.json
+
+================================================================================
+Starting experiments with temperature 1.0
+================================================================================
+
+Testing models:   0%|          | 0/3 [00:00<?, ?it/s][A
+Model gpt-3.5-turbo:   0%|          | 0/3 [00:00<?, ?it/s][A
+Starting evaluation with judge model: gpt-3.5-turbo
+
+
+Evaluating responses with gpt-3.5-turbo:   0%|          | 0/30 [00:00<?, ?it/s][A[A
+
+Evaluating responses with gpt-3.5-turbo:   0%|          | 0/30 [00:04<?, ?it/s, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:   3%|▎         | 1/30 [00:04<02:18,  4.77s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:   3%|▎         | 1/30 [00:13<02:18,  4.77s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:   7%|▋         | 2/30 [00:13<03:14,  6.95s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:   7%|▋         | 2/30 [00:17<03:14,  6.95s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  10%|█         | 3/30 [00:17<02:39,  5.92s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  10%|█         | 3/30 [00:21<02:39,  5.92s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  13%|█▎        | 4/30 [00:21<02:14,  5.18s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  13%|█▎        | 4/30 [00:25<02:14,  5.18s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  17%|█▋        | 5/30 [00:25<01:50,  4.43s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  17%|█▋        | 5/30 [00:29<01:50,  4.43s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  20%|██        | 6/30 [00:29<01:43,  4.32s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  20%|██        | 6/30 [00:33<01:43,  4.32s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  23%|██▎       | 7/30 [00:33<01:40,  4.35s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  23%|██▎       | 7/30 [00:36<01:40,  4.35s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  27%|██▋       | 8/30 [00:36<01:23,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  27%|██▋       | 8/30 [00:39<01:23,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  30%|███       | 9/30 [00:39<01:19,  3.78s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  30%|███       | 9/30 [00:44<01:19,  3.78s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  33%|███▎      | 10/30 [00:44<01:21,  4.06s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  33%|███▎      | 10/30 [00:47<01:21,  4.06s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  37%|███▋      | 11/30 [00:47<01:11,  3.78s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  37%|███▋      | 11/30 [00:50<01:11,  3.78s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  40%|████      | 12/30 [00:50<01:02,  3.45s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  40%|████      | 12/30 [00:55<01:02,  3.45s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  43%|████▎     | 13/30 [00:55<01:04,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  43%|████▎     | 13/30 [00:58<01:04,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  47%|████▋     | 14/30 [00:58<01:01,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  47%|████▋     | 14/30 [01:01<01:01,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  50%|█████     | 15/30 [01:01<00:53,  3.55s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  50%|█████     | 15/30 [01:04<00:53,  3.55s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  53%|█████▎    | 16/30 [01:04<00:47,  3.40s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  53%|█████▎    | 16/30 [01:08<00:47,  3.40s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  57%|█████▋    | 17/30 [01:08<00:45,  3.49s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  57%|█████▋    | 17/30 [01:11<00:45,  3.49s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  60%|██████    | 18/30 [01:11<00:39,  3.29s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  60%|██████    | 18/30 [01:20<00:39,  3.29s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  63%|██████▎   | 19/30 [01:20<00:56,  5.14s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  63%|██████▎   | 19/30 [01:25<00:56,  5.14s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  67%|██████▋   | 20/30 [01:25<00:48,  4.86s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  67%|██████▋   | 20/30 [01:28<00:48,  4.86s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  70%|███████   | 21/30 [01:28<00:38,  4.30s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  70%|███████   | 21/30 [01:31<00:38,  4.30s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  73%|███████▎  | 22/30 [01:31<00:31,  3.94s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  73%|███████▎  | 22/30 [01:34<00:31,  3.94s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  77%|███████▋  | 23/30 [01:34<00:26,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  77%|███████▋  | 23/30 [01:37<00:26,  3.81s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  80%|████████  | 24/30 [01:37<00:21,  3.59s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  80%|████████  | 24/30 [01:40<00:21,  3.59s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  83%|████████▎ | 25/30 [01:40<00:16,  3.26s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  83%|████████▎ | 25/30 [01:42<00:16,  3.26s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  87%|████████▋ | 26/30 [01:42<00:12,  3.06s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  87%|████████▋ | 26/30 [01:46<00:12,  3.06s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  90%|█████████ | 27/30 [01:46<00:09,  3.16s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  90%|█████████ | 27/30 [01:48<00:09,  3.16s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  93%|█████████▎| 28/30 [01:48<00:05,  2.98s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  93%|█████████▎| 28/30 [01:53<00:05,  2.98s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  97%|█████████▋| 29/30 [01:53<00:03,  3.39s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo:  97%|█████████▋| 29/30 [01:56<00:03,  3.39s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-3.5-turbo: 100%|██████████| 30/30 [01:56<00:00,  3.39s/it, scores=100/100][A[AEvaluating responses with gpt-3.5-turbo: 100%|██████████| 30/30 [01:56<00:00,  3.89s/it, scores=100/100]
+
+Model gpt-3.5-turbo:  33%|███▎      | 1/3 [01:56<03:53, 116.68s/it][A
+Model gpt-4o-mini:  33%|███▎      | 1/3 [01:56<03:53, 116.68s/it]  [AResults saved to results/exp1c_reasoning/reasoning_gpt_3.5_turbo_temp_1_0.json
+
+Starting evaluation with judge model: gpt-4o-mini
+
+
+Evaluating responses with gpt-4o-mini:   0%|          | 0/30 [00:00<?, ?it/s][A[A
+
+Evaluating responses with gpt-4o-mini:   0%|          | 0/30 [00:10<?, ?it/s, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:   3%|▎         | 1/30 [00:10<04:53, 10.14s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:   3%|▎         | 1/30 [00:22<04:53, 10.14s/it, scores=89/100] [A[A
+
+Evaluating responses with gpt-4o-mini:   7%|▋         | 2/30 [00:22<05:15, 11.26s/it, scores=89/100][A[A
+
+Evaluating responses with gpt-4o-mini:   7%|▋         | 2/30 [00:31<05:15, 11.26s/it, scores=84/100][A[A
+
+Evaluating responses with gpt-4o-mini:  10%|█         | 3/30 [00:31<04:40, 10.39s/it, scores=84/100][A[A
+
+Evaluating responses with gpt-4o-mini:  10%|█         | 3/30 [00:42<04:40, 10.39s/it, scores=82/100][A[A
+
+Evaluating responses with gpt-4o-mini:  13%|█▎        | 4/30 [00:42<04:38, 10.73s/it, scores=82/100][A[A
+
+Evaluating responses with gpt-4o-mini:  13%|█▎        | 4/30 [00:52<04:38, 10.73s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  17%|█▋        | 5/30 [00:52<04:14, 10.19s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  17%|█▋        | 5/30 [01:01<04:14, 10.19s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:  20%|██        | 6/30 [01:01<03:57,  9.90s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:  20%|██        | 6/30 [01:24<03:57,  9.90s/it, scores=74/100] [A[A
+
+Evaluating responses with gpt-4o-mini:  23%|██▎       | 7/30 [01:24<05:29, 14.32s/it, scores=74/100][A[A
+
+Evaluating responses with gpt-4o-mini:  23%|██▎       | 7/30 [01:35<05:29, 14.32s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:  27%|██▋       | 8/30 [01:35<04:52, 13.28s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:  27%|██▋       | 8/30 [01:49<04:52, 13.28s/it, scores=81/100] [A[A
+
+Evaluating responses with gpt-4o-mini:  30%|███       | 9/30 [01:49<04:38, 13.26s/it, scores=81/100][A[A
+
+Evaluating responses with gpt-4o-mini:  30%|███       | 9/30 [02:02<04:38, 13.26s/it, scores=92/100][A[A
+
+Evaluating responses with gpt-4o-mini:  33%|███▎      | 10/30 [02:02<04:26, 13.30s/it, scores=92/100][A[A
+
+Evaluating responses with gpt-4o-mini:  33%|███▎      | 10/30 [02:15<04:26, 13.30s/it, scores=51/100][A[A
+
+Evaluating responses with gpt-4o-mini:  37%|███▋      | 11/30 [02:15<04:12, 13.27s/it, scores=51/100][A[A
+
+Evaluating responses with gpt-4o-mini:  37%|███▋      | 11/30 [02:27<04:12, 13.27s/it, scores=81/100][A[A
+
+Evaluating responses with gpt-4o-mini:  40%|████      | 12/30 [02:27<03:49, 12.72s/it, scores=81/100][A[A
+
+Evaluating responses with gpt-4o-mini:  40%|████      | 12/30 [02:38<03:49, 12.72s/it, scores=51/100][A[A
+
+Evaluating responses with gpt-4o-mini:  43%|████▎     | 13/30 [02:38<03:31, 12.47s/it, scores=51/100][A[A
+
+Evaluating responses with gpt-4o-mini:  43%|████▎     | 13/30 [02:49<03:31, 12.47s/it, scores=42/100][A[A
+
+Evaluating responses with gpt-4o-mini:  47%|████▋     | 14/30 [02:49<03:10, 11.88s/it, scores=42/100][A[A
+
+Evaluating responses with gpt-4o-mini:  47%|████▋     | 14/30 [03:01<03:10, 11.88s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  50%|█████     | 15/30 [03:01<02:58, 11.93s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  50%|█████     | 15/30 [03:13<02:58, 11.93s/it, scores=94/100][A[A
+
+Evaluating responses with gpt-4o-mini:  53%|█████▎    | 16/30 [03:13<02:46, 11.86s/it, scores=94/100][A[A
+
+Evaluating responses with gpt-4o-mini:  53%|█████▎    | 16/30 [03:22<02:46, 11.86s/it, scores=59/100][A[A
+
+Evaluating responses with gpt-4o-mini:  57%|█████▋    | 17/30 [03:22<02:24, 11.09s/it, scores=59/100][A[A
+
+Evaluating responses with gpt-4o-mini:  57%|█████▋    | 17/30 [04:53<02:24, 11.09s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:  60%|██████    | 18/30 [04:53<07:02, 35.21s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o-mini:  60%|██████    | 18/30 [05:02<07:02, 35.21s/it, scores=92/100] [A[A
+
+Evaluating responses with gpt-4o-mini:  63%|██████▎   | 19/30 [05:02<04:59, 27.20s/it, scores=92/100][A[A
+
+Evaluating responses with gpt-4o-mini:  63%|██████▎   | 19/30 [05:26<04:59, 27.20s/it, scores=40/100][A[A
+
+Evaluating responses with gpt-4o-mini:  67%|██████▋   | 20/30 [05:26<04:21, 26.14s/it, scores=40/100][A[A
+
+Evaluating responses with gpt-4o-mini:  67%|██████▋   | 20/30 [05:33<04:21, 26.14s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  70%|███████   | 21/30 [05:33<03:03, 20.41s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  70%|███████   | 21/30 [05:38<03:03, 20.41s/it, scores=84/100][A[A
+
+Evaluating responses with gpt-4o-mini:  73%|███████▎  | 22/30 [05:38<02:08, 16.04s/it, scores=84/100][A[A
+
+Evaluating responses with gpt-4o-mini:  73%|███████▎  | 22/30 [05:50<02:08, 16.04s/it, scores=90/100][A[A
+
+Evaluating responses with gpt-4o-mini:  77%|███████▋  | 23/30 [05:50<01:42, 14.67s/it, scores=90/100][A[A
+
+Evaluating responses with gpt-4o-mini:  77%|███████▋  | 23/30 [06:01<01:42, 14.67s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  80%|████████  | 24/30 [06:01<01:21, 13.51s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini:  80%|████████  | 24/30 [06:09<01:21, 13.51s/it, scores=64/100][A[A
+
+Evaluating responses with gpt-4o-mini:  83%|████████▎ | 25/30 [06:09<00:59, 11.94s/it, scores=64/100][A[A
+
+Evaluating responses with gpt-4o-mini:  83%|████████▎ | 25/30 [06:19<00:59, 11.94s/it, scores=78/100][A[A
+
+Evaluating responses with gpt-4o-mini:  87%|████████▋ | 26/30 [06:19<00:45, 11.28s/it, scores=78/100][A[A
+
+Evaluating responses with gpt-4o-mini:  87%|████████▋ | 26/30 [06:28<00:45, 11.28s/it, scores=94/100][A[A
+
+Evaluating responses with gpt-4o-mini:  90%|█████████ | 27/30 [06:28<00:31, 10.66s/it, scores=94/100][A[A
+
+Evaluating responses with gpt-4o-mini:  90%|█████████ | 27/30 [06:37<00:31, 10.66s/it, scores=88/100][A[A
+
+Evaluating responses with gpt-4o-mini:  93%|█████████▎| 28/30 [06:37<00:20, 10.27s/it, scores=88/100][A[A
+
+Evaluating responses with gpt-4o-mini:  93%|█████████▎| 28/30 [06:47<00:20, 10.27s/it, scores=90/100][A[A
+
+Evaluating responses with gpt-4o-mini:  97%|█████████▋| 29/30 [06:47<00:09,  9.97s/it, scores=90/100][A[A
+
+Evaluating responses with gpt-4o-mini:  97%|█████████▋| 29/30 [06:55<00:09,  9.97s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o-mini: 100%|██████████| 30/30 [06:55<00:00,  9.35s/it, scores=98/100][A[AEvaluating responses with gpt-4o-mini: 100%|██████████| 30/30 [06:55<00:00, 13.84s/it, scores=98/100]
+
+Model gpt-4o-mini:  67%|██████▋   | 2/3 [08:51<04:52, 292.25s/it][A
+Model gpt-4o:  67%|██████▋   | 2/3 [08:51<04:52, 292.25s/it]     [AResults saved to results/exp1c_reasoning/reasoning_gpt_4o_mini_temp_1_0.json
+
+Starting evaluation with judge model: gpt-4o
+
+
+Evaluating responses with gpt-4o:   0%|          | 0/30 [00:00<?, ?it/s][A[A
+
+Evaluating responses with gpt-4o:   0%|          | 0/30 [00:19<?, ?it/s, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:   3%|▎         | 1/30 [00:19<09:16, 19.18s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:   3%|▎         | 1/30 [00:32<09:16, 19.18s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:   7%|▋         | 2/30 [00:32<07:27, 16.00s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:   7%|▋         | 2/30 [00:47<07:27, 16.00s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  10%|█         | 3/30 [00:47<06:48, 15.12s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  10%|█         | 3/30 [01:11<06:48, 15.12s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  13%|█▎        | 4/30 [01:11<08:11, 18.92s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  13%|█▎        | 4/30 [01:42<08:11, 18.92s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  17%|█▋        | 5/30 [01:42<09:38, 23.13s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  17%|█▋        | 5/30 [02:04<09:38, 23.13s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  20%|██        | 6/30 [02:04<09:05, 22.74s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  20%|██        | 6/30 [02:51<09:05, 22.74s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  23%|██▎       | 7/30 [02:51<11:43, 30.60s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  23%|██▎       | 7/30 [03:41<11:43, 30.60s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  27%|██▋       | 8/30 [03:41<13:31, 36.89s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  27%|██▋       | 8/30 [03:57<13:31, 36.89s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  30%|███       | 9/30 [03:57<10:37, 30.34s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  30%|███       | 9/30 [04:20<10:37, 30.34s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  33%|███▎      | 10/30 [04:20<09:21, 28.07s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  33%|███▎      | 10/30 [04:39<09:21, 28.07s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  37%|███▋      | 11/30 [04:39<08:00, 25.27s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  37%|███▋      | 11/30 [05:15<08:00, 25.27s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  40%|████      | 12/30 [05:15<08:37, 28.73s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  40%|████      | 12/30 [05:33<08:37, 28.73s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  43%|████▎     | 13/30 [05:33<07:11, 25.39s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  43%|████▎     | 13/30 [05:47<07:11, 25.39s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  47%|████▋     | 14/30 [05:47<05:47, 21.75s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  47%|████▋     | 14/30 [06:10<05:47, 21.75s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  50%|█████     | 15/30 [06:10<05:35, 22.35s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  50%|█████     | 15/30 [06:25<05:35, 22.35s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  53%|█████▎    | 16/30 [06:25<04:40, 20.01s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  53%|█████▎    | 16/30 [06:46<04:40, 20.01s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  57%|█████▋    | 17/30 [06:46<04:25, 20.44s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  57%|█████▋    | 17/30 [07:01<04:25, 20.44s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  60%|██████    | 18/30 [07:01<03:45, 18.79s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  60%|██████    | 18/30 [08:15<03:45, 18.79s/it, scores=99/100] [A[A
+
+Evaluating responses with gpt-4o:  63%|██████▎   | 19/30 [08:15<06:27, 35.21s/it, scores=99/100][A[A
+
+Evaluating responses with gpt-4o:  63%|██████▎   | 19/30 [08:50<06:27, 35.21s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  67%|██████▋   | 20/30 [08:50<05:53, 35.38s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  67%|██████▋   | 20/30 [09:02<05:53, 35.38s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  70%|███████   | 21/30 [09:02<04:14, 28.26s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  70%|███████   | 21/30 [09:23<04:14, 28.26s/it, scores=98/100] [A[A
+
+Evaluating responses with gpt-4o:  73%|███████▎  | 22/30 [09:23<03:27, 25.96s/it, scores=98/100][A[A
+
+Evaluating responses with gpt-4o:  73%|███████▎  | 22/30 [09:41<03:27, 25.96s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  77%|███████▋  | 23/30 [09:41<02:45, 23.67s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  77%|███████▋  | 23/30 [10:04<02:45, 23.67s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  80%|████████  | 24/30 [10:04<02:21, 23.54s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  80%|████████  | 24/30 [10:27<02:21, 23.54s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  83%|████████▎ | 25/30 [10:27<01:55, 23.19s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  83%|████████▎ | 25/30 [10:51<01:55, 23.19s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  87%|████████▋ | 26/30 [10:51<01:34, 23.61s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  87%|████████▋ | 26/30 [11:01<01:34, 23.61s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  90%|█████████ | 27/30 [11:01<00:57, 19.31s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  90%|█████████ | 27/30 [11:12<00:57, 19.31s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  93%|█████████▎| 28/30 [11:12<00:33, 16.83s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  93%|█████████▎| 28/30 [11:48<00:33, 16.83s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  97%|█████████▋| 29/30 [11:48<00:22, 22.67s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o:  97%|█████████▋| 29/30 [12:03<00:22, 22.67s/it, scores=100/100][A[A
+
+Evaluating responses with gpt-4o: 100%|██████████| 30/30 [12:03<00:00, 20.46s/it, scores=100/100][A[AEvaluating responses with gpt-4o: 100%|██████████| 30/30 [12:03<00:00, 24.12s/it, scores=100/100]
+
+Model gpt-4o: 100%|██████████| 3/3 [20:55<00:00, 489.29s/it][A
+                                                            [ATemperature 1.0: 100%|██████████| 3/3 [58:33<00:00, 1193.10s/it]Temperature 1.0: 100%|██████████| 3/3 [58:33<00:00, 1171.18s/it]
+Results saved to results/exp1c_reasoning/reasoning_gpt_4o_temp_1_0.json
+
+All results saved to results/exp1c_reasoning/combined_results_reasoning.json

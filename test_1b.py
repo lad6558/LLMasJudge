@@ -112,6 +112,98 @@ def test_temperature_variance_hypothesis():
                 adjusted_p = p * (m - i)  # Holm's correction
                 adjusted_p = min(adjusted_p, 1.0)  # Cap at 1.0
                 print(f"Temperature {comparison} - adjusted p-value: {adjusted_p:.4f}")
+    
+    # After existing tests, add:
+    print("\n" + "="*80)
+    print("Testing interaction between model size and temperature sensitivity:")
+    
+    # Calculate temperature sensitivity (correlation with temperature) for each model
+    model_sensitivities = {}
+    for model in models:
+        model_data = df[df['Model'] == model]
+        
+        # Get correlation coefficient as measure of temperature sensitivity
+        correlation, _ = stats.spearmanr(model_data['Temperature'], 
+                                       model_data['Variance'])
+        model_sensitivities[model] = correlation
+    
+    print("\nTemperature sensitivity (Spearman correlation):")
+    for model, sensitivity in model_sensitivities.items():
+        print(f"{model}: {sensitivity:.4f}")
+    
+    # Compare slopes of variance increase
+    print("\nComparing rates of variance increase:")
+    for temp in temperatures:
+        print(f"\nTemperature {temp}:")
+        temp_data = df[df['Temperature'] == temp]
+        
+        # Get variances for each model
+        groups = [group['Variance'].values for name, group in 
+                 temp_data.groupby('Model')]
+        
+        if all(len(g) > 0 for g in groups):
+            # Check if all values are identical
+            all_values = np.concatenate(groups)
+            if np.all(all_values == all_values[0]):
+                print("All models produced identical variances at this temperature")
+                print(f"Variance value: {all_values[0]:.4f}")
+                continue
+                
+            # Proceed with Kruskal-Wallis test if values differ
+            h_stat, p_value = stats.kruskal(*groups)
+            print(f"Kruskal-Wallis test - p-value: {p_value:.4f}")
+            
+            # If significant, do pairwise comparisons
+            if p_value < 0.05:
+                print("Pairwise Mann-Whitney U tests:")
+                # Compare GPT-4o vs GPT-4o-mini
+                g1 = temp_data[temp_data['Model'] == 'gpt-4o']['Variance']
+                g2 = temp_data[temp_data['Model'] == 'gpt-4o-mini']['Variance']
+                _, p = stats.mannwhitneyu(g1, g2, alternative='two-sided')
+                print(f"GPT-4o vs GPT-4o-mini: p={p:.4f}")
+                
+                # Compare GPT-4o-mini vs GPT-3.5-turbo
+                g2 = temp_data[temp_data['Model'] == 'gpt-4o-mini']['Variance']
+                g3 = temp_data[temp_data['Model'] == 'gpt-3.5-turbo']['Variance']
+                _, p = stats.mannwhitneyu(g2, g3, alternative='two-sided')
+                print(f"GPT-4o-mini vs GPT-3.5-turbo: p={p:.4f}")
+    
+    # Create interaction plot
+    plt.figure(figsize=(12, 8))
+    for model in models:
+        model_data = df[df['Model'] == model].groupby('Temperature')['Variance'].mean()
+        plt.plot(model_data.index, model_data.values, marker='o', label=model)
+    
+    plt.xlabel('Temperature')
+    plt.ylabel('Mean Variance')
+    plt.title('Temperature Sensitivity by Model')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('results/model_temperature_sensitivity.png')
+    plt.close()
+    
+    # Test for differences in variance increase rate
+    print("\nTesting differences in variance increase rate:")
+    # Calculate variance increase rate (slope) for each model
+    slopes = {}
+    for model in models:
+        model_data = df[df['Model'] == model]
+        mean_variances = model_data.groupby('Temperature')['Variance'].mean()
+        # Use linear regression to get slope
+        slope, _, _, _, _ = stats.linregress(temperatures, mean_variances)
+        slopes[model] = slope
+    
+    print("\nVariance increase rates (slopes):")
+    for model, slope in slopes.items():
+        print(f"{model}: {slope:.4f}")
+    
+    # Identify which model is most/least affected by temperature
+    most_sensitive = max(slopes.items(), key=lambda x: x[1])[0]
+    least_sensitive = min(slopes.items(), key=lambda x: x[1])[0]
+    
+    print(f"\nMost temperature-sensitive model: {most_sensitive}")
+    print(f"Least temperature-sensitive model: {least_sensitive}")
 
 if __name__ == "__main__":
     test_temperature_variance_hypothesis() 
