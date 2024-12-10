@@ -41,3 +41,4 @@ ENV/
 ehthumbs.db
 Thumbs.db
 *.out
+*.log

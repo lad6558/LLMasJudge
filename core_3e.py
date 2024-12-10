@@ -60,23 +60,47 @@ def judge_response(
         functions = [
             {
                 "name": "submit_score",
-                "description": """Submit a score for the LLM response. On a scale of 1 to 10. Break down the scale to sub scores. Novelty from 0-2, instruction following from 0-3, clarity from 0-2, truthiness from 0-2, formatting from 0-1. Submit the sum of the subscores but not the subscores themselves.""",
+                "description": "Submit scores for the LLM response with detailed subscores.",
                 "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "score": {
+                        "novelty": {
                             "type": "integer",
-                            "description": f"Score from 1-{scale} ({scale} being best)",
-                            "minimum": 1,
-                            "maximum": scale
+                            "description": "Novelty score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "instruction_following": {
+                            "type": "integer",
+                            "description": "Instruction following score (0-3)",
+                            "minimum": 0,
+                            "maximum": 3
+                        },
+                        "clarity": {
+                            "type": "integer",
+                            "description": "Clarity score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "truthiness": {
+                            "type": "integer",
+                            "description": "Truthiness score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "formatting": {
+                            "type": "integer",
+                            "description": "Formatting score (0-1)",
+                            "minimum": 0,
+                            "maximum": 1
                         },
                         "explanation": {
                             "type": "string",
-                            "description": "Detailed explanation for the score"
+                            "description": "Detailed explanation for the scores"
                         }
                     },
-                    "required": ["score", "explanation"]
+                    "required": ["novelty", "instruction_following", "clarity", "truthiness", "formatting", "explanation"]
                 }
             }
         ]
@@ -84,23 +108,47 @@ def judge_response(
         functions = [
             {
                 "name": "submit_score",
-                "description": "Submit a score and explanation for the LLM response. Break down the scale to sub scores. Novelty from 0-2, instruction following from 0-3, clarity from 0-2, truthiness from 0-2, formatting from 0-1. Submit the sum of the subscores but not the subscores themselves.",
+                "description": "Submit scores for the LLM response with detailed subscores.",
                 "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
+                        "novelty": {
+                            "type": "integer",
+                            "description": "Novelty score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "instruction_following": {
+                            "type": "integer",
+                            "description": "Instruction following score (0-3)",
+                            "minimum": 0,
+                            "maximum": 3
+                        },
+                        "clarity": {
+                            "type": "integer",
+                            "description": "Clarity score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "truthiness": {
+                            "type": "integer",
+                            "description": "Truthiness score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "formatting": {
+                            "type": "integer",
+                            "description": "Formatting score (0-1)",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
                         "explanation": {
                             "type": "string",
-                            "description": "Detailed explanation for the score"
-                        },
-                        "score": {
-                            "type": "integer",
-                            "description": f"Score from 1-{scale} ({scale} being best)",
-                            "minimum": 1,
-                            "maximum": scale
+                            "description": "Detailed explanation for the scores"
                         }
                     },
-                    "required": ["explanation", "score"]
+                    "required": ["novelty", "instruction_following", "clarity", "truthiness", "formatting", "explanation"]
                 }
             }
         ]
@@ -108,18 +156,47 @@ def judge_response(
         functions = [
             {
                 "name": "submit_score",
-                "description": "Submit a score for the LLM response. Break down the scale to sub scores. Novelty from 0-2, instruction following from 0-3, clarity from 0-2, truthiness from 0-2, formatting from 0-1. Submit the sum of the subscores but not the subscores themselves.",
+                "description": "Submit scores for the LLM response with detailed subscores.",
+                "strict": True,
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "score": {
+                        "novelty": {
                             "type": "integer",
-                            "description": f"Score from 1-{scale} ({scale} being best)",
-                            "minimum": 1,
-                            "maximum": scale
+                            "description": "Novelty score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "instruction_following": {
+                            "type": "integer",
+                            "description": "Instruction following score (0-3)",
+                            "minimum": 0,
+                            "maximum": 3
+                        },
+                        "clarity": {
+                            "type": "integer",
+                            "description": "Clarity score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "truthiness": {
+                            "type": "integer",
+                            "description": "Truthiness score (0-2)",
+                            "minimum": 0,
+                            "maximum": 2
+                        },
+                        "formatting": {
+                            "type": "integer",
+                            "description": "Formatting score (0-1)",
+                            "minimum": 0,
+                            "maximum": 1
+                        },
+                        "explanation": {
+                            "type": "string",
+                            "description": "Detailed explanation for the scores"
                         }
                     },
-                    "required": ["score"]
+                    "required": ["novelty", "instruction_following", "clarity", "truthiness", "formatting", "explanation"]
                 }
             }
         ]
@@ -184,8 +261,25 @@ Please provide only a score, with no explanation."""
                 function_call = choice.message.function_call
                 # Parse the response
                 result = json.loads(function_call.arguments)
+                
+                # Calculate total score from subscores
+                total_score = (
+                    result["novelty"] +
+                    result["instruction_following"] +
+                    result["clarity"] +
+                    result["truthiness"] +
+                    result["formatting"]
+                )
+                
                 results.append({
-                    "score": result["score"],
+                    "score": total_score,  # Use the sum of subscores
+                    "subscores": {  # Store the individual subscores
+                        "novelty": result["novelty"],
+                        "instruction_following": result["instruction_following"],
+                        "clarity": result["clarity"],
+                        "truthiness": result["truthiness"],
+                        "formatting": result["formatting"]
+                    },
                     "explanation": result.get("explanation", "No explanation requested"),
                     "success": True,
                     "raw_prompt": prompt,
