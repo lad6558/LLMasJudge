@@ -14,10 +14,10 @@ def analyze_experiment_4a():
     with open(results_path, 'r') as f:
         results = json.load(f)
 
-    # Extract intermediate scores for each method
+    # Extract intermediate scores
     intermediate_scores = results['intermediate_scores']
 
-    # Prepare data for Friedman test
+    # First analysis: Compare all methods (existing code)
     methods = {
         'Always Tie': intermediate_scores['additional_methods']['always_tie'],
         'Random': intermediate_scores['additional_methods']['random'],
@@ -78,6 +78,56 @@ def analyze_experiment_4a():
                         f"{better_method} is significantly better than {worse_method} (p={p:.4f})")
     else:
         print("\nNo significant differences found between methods.")
+
+    # New analysis: Compare different temperatures for no reasoning
+    temps_no_reasoning = {
+        f"No Reasoning (t={temp})": scores 
+        for temp, scores in intermediate_scores['no_reasoning_temps'].items()
+    }
+    df_temps_no_reasoning = pd.DataFrame(temps_no_reasoning)
+    
+    friedman_stat_nr, p_value_nr = stats.friedmanchisquare(
+        *[df_temps_no_reasoning[col] for col in df_temps_no_reasoning.columns])
+
+    print("\n\nTemperature Comparison (No Reasoning):")
+    print(f"Friedman Test Results:")
+    print(f"Statistic: {friedman_stat_nr:.4f}")
+    print(f"P-value: {p_value_nr:.4f}")
+
+    if p_value_nr < 0.05:
+        post_hoc_nr = posthoc_nemenyi_friedman(df_temps_no_reasoning)
+        
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(post_hoc_nr, annot=True, cmap='RdYlGn_r', center=0.05)
+        plt.title('Post-hoc Nemenyi Test P-values: No Reasoning Temperatures')
+        plt.tight_layout()
+        plt.savefig('results/exp4a/statistical_analysis_temps_no_reasoning.png')
+        plt.close()
+
+    # Compare different temperatures for reasoning
+    temps_reasoning = {
+        f"Reasoning (t={temp})": scores 
+        for temp, scores in intermediate_scores['with_reasoning_temps'].items()
+    }
+    df_temps_reasoning = pd.DataFrame(temps_reasoning)
+    
+    friedman_stat_r, p_value_r = stats.friedmanchisquare(
+        *[df_temps_reasoning[col] for col in df_temps_reasoning.columns])
+
+    print("\n\nTemperature Comparison (With Reasoning):")
+    print(f"Friedman Test Results:")
+    print(f"Statistic: {friedman_stat_r:.4f}")
+    print(f"P-value: {p_value_r:.4f}")
+
+    if p_value_r < 0.05:
+        post_hoc_r = posthoc_nemenyi_friedman(df_temps_reasoning)
+        
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(post_hoc_r, annot=True, cmap='RdYlGn_r', center=0.05)
+        plt.title('Post-hoc Nemenyi Test P-values: With Reasoning Temperatures')
+        plt.tight_layout()
+        plt.savefig('results/exp4a/statistical_analysis_temps_reasoning.png')
+        plt.close()
 
 
 if __name__ == "__main__":
