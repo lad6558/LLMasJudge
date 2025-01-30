@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)http://localhost:5173/blogs/deep_learning -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<link rel="icon" href="http://localhost:5173/favicon.png">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="preconnect" href="https://fonts.googleapis.com/">
+		<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+		<link href="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/css2" rel="stylesheet">
+		
+	<title>Quantifying Numerical Consistency of LLM-as-a-Judge</title><!-- HTML_TAG_START --><!-- HTML_TAG_END -->
+	<style type="text/css" data-vite-dev-id="/Users/andiliu/Desktop/lad6558.github.io/src/app.css">/*
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
+*//*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+  border-width: 0; /* 2 */
+  border-style: solid; /* 2 */
+  border-color: #e5e7eb; /* 2 */
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+7. Disable tap highlights on iOS
+*/
+
+html,
+:host {
+  line-height: 1.5; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4; /* 3 */
+  -o-tab-size: 4;
+     tab-size: 4; /* 3 */
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 4 */
+  font-feature-settings: normal; /* 5 */
+  font-variation-settings: normal; /* 6 */
+  -webkit-tap-highlight-color: transparent; /* 7 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  margin: 0; /* 1 */
+  line-height: inherit; /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+hr {
+  height: 0; /* 1 */
+  color: inherit; /* 2 */
+  border-top-width: 1px; /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font-family by default.
+2. Use the user's configured `mono` font-feature-settings by default.
+3. Use the user's configured `mono` font-variation-settings by default.
+4. Correct the odd `em` font sizing in all browsers.
+*/
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; /* 1 */
+  font-feature-settings: normal; /* 2 */
+  font-variation-settings: normal; /* 3 */
+  font-size: 1em; /* 4 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+table {
+  text-indent: 0; /* 1 */
+  border-color: inherit; /* 2 */
+  border-collapse: collapse; /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-feature-settings: inherit; /* 1 */
+  font-variation-settings: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  font-weight: inherit; /* 1 */
+  line-height: inherit; /* 1 */
+  color: inherit; /* 1 */
+  margin: 0; /* 2 */
+  padding: 0; /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+button,
+select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button; /* 1 */
+  background-color: transparent; /* 2 */
+  background-image: none; /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+[type='search'] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1; /* 1 */
+  color: #9ca3af; /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+:disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block; /* 1 */
+  vertical-align: middle; /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+[hidden] {
+  display: none;
+}
+
+*, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+}
+.container {
+  width: 100%;
+}
+@media (min-width: 640px) {
+
+  .container {
+    max-width: 640px;
+  }
+}
+@media (min-width: 768px) {
+
+  .container {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+
+  .container {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1280px) {
+
+  .container {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 1536px) {
+
+  .container {
+    max-width: 1536px;
+  }
+}
+.fixed {
+  position: fixed;
+}
+.relative {
+  position: relative;
+}
+.top-0 {
+  top: 0px;
+}
+.z-50 {
+  z-index: 50;
+}
+.m-2 {
+  margin: 0.5rem;
+}
+.mx-1 {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+.mx-12 {
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+.mb-12 {
+  margin-bottom: 3rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-8 {
+  margin-bottom: 2rem;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+.block {
+  display: block;
+}
+.inline {
+  display: inline;
+}
+.flex {
+  display: flex;
+}
+.contents {
+  display: contents;
+}
+.hidden {
+  display: none;
+}
+.h-16 {
+  height: 4rem;
+}
+.h-24 {
+  height: 6rem;
+}
+.h-3\/4 {
+  height: 75%;
+}
+.h-32 {
+  height: 8rem;
+}
+.h-80 {
+  height: 20rem;
+}
+.h-screen {
+  height: 100vh;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+.w-1\/2 {
+  width: 50%;
+}
+.w-3 {
+  width: 0.75rem;
+}
+.w-3\/4 {
+  width: 75%;
+}
+.w-40 {
+  width: 10rem;
+}
+.w-64 {
+  width: 16rem;
+}
+.w-8 {
+  width: 2rem;
+}
+.w-96 {
+  width: 24rem;
+}
+.w-full {
+  width: 100%;
+}
+.min-w-12 {
+  min-width: 3rem;
+}
+.min-w-96 {
+  min-width: 24rem;
+}
+.max-w-4xl {
+  max-width: 56rem;
+}
+.max-w-full {
+  max-width: 100%;
+}
+.max-w-prose {
+  max-width: 65ch;
+}
+.max-w-sm {
+  max-width: 24rem;
+}
+.flex-1 {
+  flex: 1 1 0%;
+}
+.grow {
+  flex-grow: 1;
+}
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.list-disc {
+  list-style-type: disc;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-col {
+  flex-direction: column;
+}
+.items-end {
+  align-items: flex-end;
+}
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.space-x-0 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0px * var(--tw-space-x-reverse));
+  margin-left: calc(0px * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-x-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+.overflow-auto {
+  overflow: auto;
+}
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+.rounded-md {
+  border-radius: 0.375rem;
+}
+.rounded-l-md {
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+.border {
+  border-width: 1px;
+}
+.border-2 {
+  border-width: 2px;
+}
+.border-b {
+  border-bottom-width: 1px;
+}
+.border-gray-100 {
+  --tw-border-opacity: 1;
+  border-color: rgb(243 244 246 / var(--tw-border-opacity));
+}
+.border-slate-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(203 213 225 / var(--tw-border-opacity));
+}
+.bg-slate-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity));
+}
+.bg-slate-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
+.bg-slate-800 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+}
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+.fill-slate-400 {
+  fill: #94a3b8;
+}
+.fill-white {
+  fill: #fff;
+}
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.p-4 {
+  padding: 1rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.pb-12 {
+  padding-bottom: 3rem;
+}
+.pb-2 {
+  padding-bottom: 0.5rem;
+}
+.pb-4 {
+  padding-bottom: 1rem;
+}
+.pl-1 {
+  padding-left: 0.25rem;
+}
+.pl-8 {
+  padding-left: 2rem;
+}
+.pt-0 {
+  padding-top: 0px;
+}
+.pt-0\.5 {
+  padding-top: 0.125rem;
+}
+.pt-1 {
+  padding-top: 0.25rem;
+}
+.pt-1\.5 {
+  padding-top: 0.375rem;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.font-black {
+  font-weight: 900;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+.text-blue-600 {
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
+}
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+.text-gray-800 {
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+.text-red-500 {
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+.text-slate-400 {
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity));
+}
+.text-slate-500 {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity));
+}
+.underline {
+  text-decoration-line: underline;
+}
+.shadow-2xl {
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-lg {
+  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.ring-2 {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+.ring-yellow-300 {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(253 224 71 / var(--tw-ring-opacity));
+}
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+.transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+body {
+	font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.hover\:bg-gray-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+
+.hover\:text-blue-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
+.hover\:underline:hover {
+  text-decoration-line: underline;
+}
+
+.hover\:opacity-80:hover {
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+
+  .md\:mr-4 {
+    margin-right: 1rem;
+  }
+
+  .md\:block {
+    display: block;
+  }
+
+  .md\:hidden {
+    display: none;
+  }
+
+  .md\:w-48 {
+    width: 12rem;
+  }
+
+  .md\:w-\[34rem\] {
+    width: 34rem;
+  }
+
+  .md\:max-w-xl {
+    max-width: 36rem;
+  }
+
+  .md\:flex-row {
+    flex-direction: row;
+  }
+
+  .md\:space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .md\:space-x-8 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(2rem * var(--tw-space-x-reverse));
+    margin-left: calc(2rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .md\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0px * var(--tw-space-y-reverse));
+  }
+}
+
+.dark\:block:where(.dark, .dark *) {
+  display: block;
+}
+
+.dark\:hidden:where(.dark, .dark *) {
+  display: none;
+}
+
+.dark\:border-gray-700:where(.dark, .dark *) {
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity));
+}
+
+.dark\:bg-slate-800:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+}
+
+.dark\:text-blue-500:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
+.dark\:text-slate-200:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(226 232 240 / var(--tw-text-opacity));
+}
+
+.dark\:text-slate-300:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(203 213 225 / var(--tw-text-opacity));
+}
+
+.dark\:text-slate-400:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(148 163 184 / var(--tw-text-opacity));
+}
+
+.dark\:text-slate-500:where(.dark, .dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity));
+}
+
+.dark\:hover\:bg-gray-700:hover:where(.dark, .dark *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+}
+</style><style type="text/css" data-vite-dev-id="/Users/andiliu/Desktop/lad6558.github.io/src/lib/styles/blog.scss">section h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1.5em 0 1em;
+  color: #1a202c;
+}
+.dark section h1 {
+  color: #f7fafc;
+}
+
+section h2 {
+  font-size: 2em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 2em 0 1em;
+  color: #2d3748;
+}
+.dark section h2 {
+  color: #e2e8f0;
+}
+
+section h3 {
+  font-size: 1.75em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 1.5em 0 0.75em;
+  color: #4a5568;
+}
+.dark section h3 {
+  color: #cbd5e1;
+}
+
+section h4 {
+  font-size: 1.5em;
+  font-weight: 600;
+  line-height: 2;
+  /* more vertical space */
+  margin: 1em 0 0.5em;
+}
+
+section a:hover,
+section a:focus,
+section a:active {
+  text-decoration: underline;
+}
+
+section p + p {
+  margin-top: 1.5em;
+}
+
+section p > a {
+  color: #0070f3;
+}
+
+section small > a {
+  color: #0070f3;
+}
+
+section {
+  font-size: 18px;
+  line-height: 1.5;
+  /* Dark mode styles for blockquote */
+  /* Dark mode styles for aside */
+}
+section :global(.text-sm) {
+  font-size: 0.875rem;
+}
+section main {
+  line-height: 1.5;
+  font-size: 18px;
+}
+section img {
+  max-width: 100%;
+  height: auto;
+  /* Center images */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+section figcaption,
+section small {
+  font-size: 0.8em;
+  text-align: center;
+  margin-top: 0.5em;
+  color: #888;
+}
+section .dark figcaption,
+section small {
+  color: #bbb;
+}
+section blockquote {
+  padding: 20px;
+  margin: 20px 0 20px;
+  border-left: 5px solid #ccc; /* Light grey border */
+  background-color: #f9f9f9; /* Very light grey background */
+  color: #333; /* Dark grey text */
+}
+section .dark blockquote {
+  border-left-color: #4a5568; /* Darker grey border, still matches with darker themes */
+  background-color: #2c3e50; /* A slightly lighter dark shade than bg-slate-800 */
+  color: #cbd5e1; /* text-slate-300, ensuring good readability */
+}
+section figure {
+  margin: 1em 0 1.5em;
+}
+section aside {
+  margin: 2em 0;
+  padding: 1em;
+  font-size: 0.9em;
+  color: #666;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-style: italic;
+}
+section .dark aside {
+  color: #bbb;
+  background-color: #1a2634;
+  border-color: #2d3748;
+}
+section h1:target,
+section h2:target,
+section h3:target,
+section h5:target,
+section h6:target {
+  padding-top: 70px; /* Adjust this value to match your navbar height */
+  margin-top: -70px; /* This should be the same value but negative */
+}
+section h4:target {
+  padding-top: 70px;
+  margin-top: calc(-70px + 1em);
+}
+
+section ul, section ol {
+  margin: 1.5em 0;
+  padding-left: 2em;
+}
+section ul li, section ol li {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+section ul li::marker, section ol li::marker {
+  color: #4a5568;
+}
+.dark section ul li::marker, .dark section ol li::marker {
+  color: #cbd5e1;
+}
+
+section ul {
+  list-style-type: disc;
+}
+section ul ul {
+  list-style-type: circle;
+  margin: 0.5em 0;
+}
+
+section ol {
+  list-style-type: decimal;
+}
+section ol ol {
+  list-style-type: lower-alpha;
+  margin: 0.5em 0;
+}
+section ol li {
+  margin-bottom: 0.5em;
+  padding-left: 0.5em;
+}
+section ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+section pre {
+  margin: 1.5em 0;
+  padding: 1em;
+  border-radius: 8px;
+  background-color: #f7fafc;
+  overflow-x: auto;
+  font-size: 0.9em;
+}
+.dark section pre {
+  background-color: #1a202c;
+}
+section pre code {
+  font-family: "Fira Code", monospace;
+  line-height: 1.6;
+}
+
+section code:not(pre code) {
+  background-color: #edf2f7;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: "Fira Code", monospace;
+}
+.dark section code:not(pre code) {
+  background-color: #2d3748;
+}
+
+section table {
+  width: 100%;
+  margin: 1.5em 0;
+  border-collapse: collapse;
+}
+section table th, section table td {
+  padding: 0.75em;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+.dark section table th, .dark section table td {
+  border-color: #4a5568;
+}
+section table th {
+  background-color: #f7fafc;
+  font-weight: 600;
+}
+.dark section table th {
+  background-color: #2d3748;
+}
+section table tr:nth-child(even) {
+  background-color: #f7fafc;
+}
+.dark section table tr:nth-child(even) {
+  background-color: #2d3748;
+}
+
+section hr {
+  margin: 2em 0;
+  border: 0;
+  height: 1px;
+  background-color: #e2e8f0;
+}
+.dark section hr {
+  background-color: #4a5568;
+}
+
+section em {
+  font-style: italic;
+}
+
+section strong {
+  font-weight: 600;
+}</style><style type="text/css" data-vite-dev-id="/Users/andiliu/Desktop/lad6558.github.io/src/lib/styles/prism.css">/* PrismJS 1.29.0
+https://prismjs.com/download.html#themes=prism&languages=markup+css+clike+javascript+abap+abnf+actionscript+ada+agda+al+antlr4+apacheconf+apex+apl+applescript+aql+arduino+arff+armasm+arturo+asciidoc+aspnet+asm6502+asmatmel+autohotkey+autoit+avisynth+avro-idl+awk+bash+basic+batch+bbcode+bbj+bicep+birb+bison+bnf+bqn+brainfuck+brightscript+bro+bsl+c+csharp+cpp+cfscript+chaiscript+cil+cilkc+cilkcpp+clojure+cmake+cobol+coffeescript+concurnas+csp+cooklang+coq+crystal+css-extras+csv+cue+cypher+d+dart+dataweave+dax+dhall+diff+django+dns-zone-file+docker+dot+ebnf+editorconfig+eiffel+ejs+elixir+elm+etlua+erb+erlang+excel-formula+fsharp+factor+false+firestore-security-rules+flow+fortran+ftl+gml+gap+gcode+gdscript+gedcom+gettext+gherkin+git+glsl+gn+linker-script+go+go-module+gradle+graphql+groovy+haml+handlebars+haskell+haxe+hcl+hlsl+hoon+http+hpkp+hsts+ichigojam+icon+icu-message-format+idris+ignore+inform7+ini+io+j+java+javadoc+javadoclike+javastacktrace+jexl+jolie+jq+jsdoc+js-extras+json+json5+jsonp+jsstacktrace+js-templates+julia+keepalived+keyman+kotlin+kumir+kusto+latex+latte+less+lilypond+liquid+lisp+livescript+llvm+log+lolcode+lua+magma+makefile+markdown+markup-templating+mata+matlab+maxscript+mel+mermaid+metafont+mizar+mongodb+monkey+moonscript+n1ql+n4js+nand2tetris-hdl+naniscript+nasm+neon+nevod+nginx+nim+nix+nsis+objectivec+ocaml+odin+opencl+openqasm+oz+parigp+parser+pascal+pascaligo+psl+pcaxis+peoplecode+perl+php+phpdoc+php-extras+plant-uml+plsql+powerquery+powershell+processing+prolog+promql+properties+protobuf+pug+puppet+pure+purebasic+purescript+python+qsharp+q+qml+qore+r+racket+cshtml+jsx+tsx+reason+regex+rego+renpy+rescript+rest+rip+roboconf+robotframework+ruby+rust+sas+sass+scss+scala+scheme+shell-session+smali+smalltalk+smarty+sml+solidity+solution-file+soy+sparql+splunk-spl+sqf+sql+squirrel+stan+stata+iecst+stylus+supercollider+swift+systemd+t4-templating+t4-cs+t4-vb+tap+tcl+tt2+textile+toml+tremor+turtle+twig+typescript+typoscript+unrealscript+uorazor+uri+v+vala+vbnet+velocity+verilog+vhdl+vim+visual-basic+warpscript+wasm+web-idl+wgsl+wiki+wolfram+wren+xeora+xml-doc+xojo+xquery+yaml+yang+zig&plugins=show-language+toolbar */
+code[class*='language-'],
+pre[class*='language-'] {
+	color: #000;
+	background: 0 0;
+	text-shadow: 0 1px #fff;
+	font-family: 'IBM Plex Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 0.95em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+	-webkit-hyphens: none;
+	hyphens: none;
+}
+code[class*='language-'] ::-moz-selection,
+code[class*='language-']::-moz-selection,
+pre[class*='language-'] ::-moz-selection,
+pre[class*='language-']::-moz-selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+code[class*='language-'] ::-moz-selection, code[class*='language-']::-moz-selection, pre[class*='language-'] ::-moz-selection, pre[class*='language-']::-moz-selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+code[class*='language-'] ::selection,
+code[class*='language-']::selection,
+pre[class*='language-'] ::selection,
+pre[class*='language-']::selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+@media print {
+	code[class*='language-'],
+	pre[class*='language-'] {
+		text-shadow: none;
+	}
+}
+pre[class*='language-'] {
+	padding: 1em;
+	margin: 0.5em 0;
+	overflow: auto;
+}
+:not(pre) > code[class*='language-'],
+pre[class*='language-'] {
+	background: #f5f2f0;
+}
+:not(pre) > code[class*='language-'] {
+	padding: 0.1em;
+	border-radius: 0.3em;
+	white-space: normal;
+}
+.token.cdata,
+.token.comment,
+.token.doctype,
+.token.prolog {
+	color: #708090;
+}
+.token.punctuation {
+	color: #999;
+}
+.token.namespace {
+	opacity: 0.7;
+}
+.token.boolean,
+.token.constant,
+.token.deleted,
+.token.number,
+.token.property,
+.token.symbol,
+.token.tag {
+	color: #905;
+}
+.token.attr-name,
+.token.builtin,
+.token.char,
+.token.inserted,
+.token.selector,
+.token.string {
+	color: #690;
+}
+.language-css .token.string,
+.style .token.string,
+.token.entity,
+.token.operator,
+.token.url {
+	color: #9a6e3a;
+	background: hsla(0, 0%, 100%, 0.5);
+}
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+	color: #07a;
+}
+.token.class-name,
+.token.function {
+	color: #dd4a68;
+}
+.token.important,
+.token.regex,
+.token.variable {
+	color: #e90;
+}
+.token.bold,
+.token.important {
+	font-weight: 700;
+}
+.token.italic {
+	font-style: italic;
+}
+.token.entity {
+	cursor: help;
+}
+div.code-toolbar {
+	position: relative;
+}
+div.code-toolbar > .toolbar {
+	position: absolute;
+	z-index: 10;
+	top: 0.3em;
+	right: 0.2em;
+	transition: opacity 0.3s ease-in-out;
+	opacity: 0;
+}
+div.code-toolbar:hover > .toolbar {
+	opacity: 1;
+}
+div.code-toolbar:focus-within > .toolbar {
+	opacity: 1;
+}
+div.code-toolbar > .toolbar > .toolbar-item {
+	display: inline-block;
+}
+div.code-toolbar > .toolbar > .toolbar-item > a {
+	cursor: pointer;
+}
+div.code-toolbar > .toolbar > .toolbar-item > button {
+	background: 0 0;
+	border: 0;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	overflow: visible;
+	padding: 0;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+div.code-toolbar > .toolbar > .toolbar-item > a,
+div.code-toolbar > .toolbar > .toolbar-item > button,
+div.code-toolbar > .toolbar > .toolbar-item > span {
+	color: #bbb;
+	font-size: 0.8em;
+	padding: 0 0.5em;
+	background: #f5f2f0;
+	background: rgba(224, 224, 224, 0.2);
+	box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2);
+	border-radius: 0.5em;
+}
+div.code-toolbar > .toolbar > .toolbar-item > a:focus,
+div.code-toolbar > .toolbar > .toolbar-item > a:hover,
+div.code-toolbar > .toolbar > .toolbar-item > button:focus,
+div.code-toolbar > .toolbar > .toolbar-item > button:hover,
+div.code-toolbar > .toolbar > .toolbar-item > span:focus,
+div.code-toolbar > .toolbar > .toolbar-item > span:hover {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* Dark mode styles for PrismJS */
+.dark pre[class*='language-'],
+.dark code[class*='language-'] {
+	color: #cbd5e1; /* Lighter text color for better visibility */
+	background: #2c3e50; /* Slightly lighter than bg-slate-800 for distinction */
+	text-shadow: none; /* Removing text shadow for cleaner text */
+}
+
+.dark .token.comment,
+.dark .token.prolog,
+.dark .token.doctype,
+.dark .token.cdata {
+	color: #8f9cb3; /* A less muted, more visible blue-grey */
+}
+
+.dark .token.punctuation {
+	color: #89ddff; /* A brighter, more visible color for punctuation */
+}
+
+.dark .token.namespace {
+	opacity: 1; /* Increased opacity for namespace, which might be too dim otherwise */
+}
+
+.dark .token.property,
+.dark .token.tag,
+.dark .token.boolean,
+.dark .token.number,
+.dark .token.constant,
+.dark .token.symbol,
+.dark .token.deleted {
+	color: #ff79c6; /* A bright pink for properties, tags, etc. */
+}
+
+.dark .token.selector,
+.dark .token.attr-name,
+.dark .token.string,
+.dark .token.char,
+.dark .token.builtin,
+.dark .token.inserted {
+	color: #50fa7b; /* A light green for better visibility */
+}
+
+.dark .token.operator,
+.dark .token.entity,
+.dark .token.url,
+.language-css .dark .token.string,
+.style .dark .token.string {
+	color: #ffcb6b; /* A light orange for operators, entities, and URLs */
+}
+
+.dark .token.atrule,
+.dark .token.attr-value,
+.dark .token.keyword {
+	color: #c792ea; /* A soft purple for CSS atrules, values, and keywords */
+}
+
+.dark .token.function {
+	color: #66d9ef; /* A distinct cyan for functions */
+}
+
+.dark .token.regex,
+.dark .token.important,
+.dark .token.variable {
+	color: #f8f8f2; /* A very light grey for regex, important, and variables */
+}
+
+.dark .token.important,
+.dark .token.bold {
+	font-weight: bold; /* Ensuring bold is effective in dark mode */
+}
+
+.dark .token.italic {
+	font-style: italic; /* Ensuring italic is visible */
+}
+
+/* Toolbar styles in dark mode */
+.dark div.code-toolbar > .toolbar > .toolbar-item > a,
+.dark div.code-toolbar > .toolbar > .toolbar-item > button,
+.dark div.code-toolbar > .toolbar > .toolbar-item > span {
+	background: rgba(160, 160, 160, 0.1); /* Slightly darker toolbar items for contrast */
+	box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.3); /* Darker shadow for depth */
+}
+</style><meta name="description" content="Don&#39;t use reason. Just use intuition."><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Quantifying Numerical Consistency of LLM-as-a-Judge","description":"Don't use reason. Just use intuition.","datePublished":"2024-12-10T00:00:00.000Z","url":"https://andiliu.me/blogs/deep_learning","author":{"@type":"Person","name":"Andi Liu","url":"https://andiliu.me"},"image":"https://andiliu.me/blogs/deep_learning/1.png"}</script></head>
+	<body data-sveltekit-preload-data="hover" br-mode="off" saccades-color="" fixation-strength="2" saccades-interval="0" style="--fixation-edge-opacity: 80%; --br-line-height: 1; --br-boldness: 600;">
+		<div style="display: contents"> <div class="text-4xl font-black block md:hidden"></div>   <button class="hover:text-blue-500"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon hidden dark:block"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button></div></nav> 
+<main class="flex flex-row justify-center items-center max-w-full">
+  <section class="max-w-prose w-full mb-12 mt-4 px-4">
+    <h1 class="text-4xl font-bold mb-2">Quantifying Numerical Consistency of LLM-as-a-Judge</h1>
+    <p class="text-slate-500 dark:text-slate-400 mb-1">By Andi Liu and Susan Wang</p>
+    <p class="text-slate-500 dark:text-slate-400 mb-8 text-sm">2024-12-10</p>
+   <aside><p>You can find the code here: <a href="https://github.com/lad6558/LLMasJudge" rel="nofollow">https://github.com/lad6558/LLMasJudge</a></p></aside> <h2>Could LLMs be Judges?</h2> <p>Advancements in large language models (LLMs) have revolutionized creative content generation and problem-solving in expert knowledge domains. The increasing application of LLMs has led to a central problem: how to properly evaluate the quality of model-generated responses?</p> <p>While alignment with human judgments remains the gold standard, LLMs could potentially serve as their own judges, solving the very challenges they present. <strong>LLM-as-a-Judge</strong> is the use of LLMs to evaluate the quality, relevance, or correctness of responses generated by other LLMs, serving as automated evaluators in various tasks. As a substitute of human judgements, LLM-as-a-Judge has unique advantages [1]:</p> <ol><li><strong>Scalability and Speed</strong>: LLMs can evaluate responses rapidly and manage large-scale tasks with ease, making them ideal for handling extensive datasets or frequent evaluations.</li> <li><strong>Cost-Effectiveness</strong>: Using LLMs for evaluation reduces the expenses of hiring, training, and managing human evaluators, particularly for large or ongoing projects.</li> <li><strong>Customizability</strong>: LLMs can be fine-tuned or adjusted to focus on specific evaluation criteria, allowing them to adapt to a wide range of tasks and domains effectively.</li></ol> <h3>The Setups for Model Judges</h3> <p>To conduct evaluations using LLM-as-a-Judge, all it takes is crafting a well-designed prompt! Here are three commonly used setups for instructing the models to act as evaluators [2]:</p> <ol><li><strong>Pairwise Comparison</strong>: Judges compare two model-generated responses to a question and select the better one, ideal for identifying subtle differences between models.</li> <li><strong>Pointwise Scoring</strong>: Judges rate a single response on a predefined scale (e.g., 1 to 5), focusing on its quality independently of others.</li> <li><strong>Reference-Guided Scoring</strong>: Judges use a reference answer as a benchmark to evaluate responses, ensuring consistent and standard-aligned scoring.</li></ol> <p>Each of these setups caters to specific evaluation needs and can also be enhanced through contextual prompt engineering—there's no universal standard for guiding model judges!</p> <h3>The Biases in Judges &amp; Methods for Improvement</h3> <p>LLM-as-a-Judge is effective at predicting human preferences but comes with limitations and biases that affect evaluation quality. Common issues include <strong>Verbosity Bias</strong>–tending to score longer responses higher, even when they lack substance. <strong>Position Bias</strong>–favoring responses based on their order in the prompt, such as preferring the first in pairwise comparisons. A more comprehensive list of biases is given below [3]:</p> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/1.png" alt="List of biases in LLM-as-a-Judge" title="List of biases in LLM-as-a-Judge">Recent efforts to enhance LLM-as-a-Judge have focused on developing robust evaluation platforms to mitigate model biases and limitations. Here are some sample strategies [1]:</p> <ul><li><strong>Position switching trick:</strong> Randomize where the model's outputs appear in the prompt, generate multiple scores using varied positions, and then average these scores.</li> <li><strong>Few-shot demonstrations:</strong> Include examples that reflect the natural score distribution to help the judge model calibrate its scoring mechanism.</li> <li><strong>Reference solutions for complex tasks:</strong> Incorporate correct solutions to challenging math or reasoning problems into the prompt, giving the judge a reference point when evaluating responses.</li></ul> <p>While many existing studies have attempted the aforementioned bias-mitigating methods in pairwise comparisons, these strategies have not been fully explored in other setups. Moreover, pairwise comparison has its inherent limitations. First is the computational efficiency. If we have n different responses to compare, LLMs will take O(n^2) times to judge. Second, pairwise comparison is known to be affected by primacy or recency bias, as mentioned before. Third, it is hard to quantify the difference between the two responses. For example, it may be difficult for models to judge when the two responses are equally preferable based on human evaluations.</p> <p>To address these research gaps, our study aims to reduce judgement inconsistency in various usage contexts, using pointwise scoring from a scale of 1 to 10. Specifically, we asked the following research questions under the context of pointwise scoring:</p> <ul><li>Does higher temperature result in larger variances (experiment 1)?</li> <li>Do larger models get less affected by temperature (experiment 2)?</li> <li>Does Chain-of-Thought make the model more consistent? What about post-hoc reasoning (experiment 3)?</li> <li>Does giving the judge grading guidelines reduce the variance? Are more detailed guidelines better (experiment 4)?</li></ul> <p>The main motivation for our study is to evaluate and improve the consistency of LLM-as-a-Judge, providing scalable and interpretable approaches to estimate human preferences.</p> <h2>How Consistent Are the Judges?</h2> <p>The first question we want to explore is how consistent the judges are in their grading. How to reduce the variances in numerical grading to make the judges more consistent?</p> <p>Before we dive into specific experiments, We want to introduce the setup of experiments.</p> <h3>Experiment Setup</h3> <p>Basically, we ask judge LLMs to grade responses of other LLMs to some question.</p> <p>The question and response pairs come from MT-bench, a dataset consisting of 3,300 expert-level pairwise evaluations conducted by humans, assessing responses from six different models to 80 MT-Bench questions [4]. Responses were sampled from models including GPT-4, GPT-3.5, Claude-v1, Vicuna-13B, Alpaca-13B, and LLaMA-13B. The annotations were mainly performed by graduate students with specialized knowledge in the subject areas relevant to the questions. We downloaded the dataset from <a href="https://huggingface.co/spaces/lmsys/mt-bench" rel="nofollow">Hugging Face</a>. We used MT-bench because we think it covers a wide range of cases representative of where LLM-as-judge is applied.</p> <p>The specific setup depended on individual experiments, but all setups have some commonalities. We always use a common opening prompt or some variations of it, as taken from the work by Zheng et al [4].</p> <p>An example of a prompt would be:</p> <pre class="language-python"><code class="language-python">prompt <span class="token operator">=</span> <span class="token triple-quoted-string string">"""[System]
+Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below. Please evaluate the following response on a scale from 1-10.
+
+[Question]
+What are the key features of Python's list comprehension?
+
+[The Start of Assistant's Answer]
+List comprehensions in Python provide a concise way to create lists based on existing sequences.
+[The End of Assistant's Answer]
+
+Please provide only a score, with no explanation.
+"""</span></code></pre> <p>Second, the LLM judges we evaluated are all from the OpenAI family, specifically GPT-3.5-turbo, GPT-4o-mini, GPT-4o, and mostly GPT-4o-mini because it demonstrates good balance between speed and power (GPT-4o's rate limit is too low to run statistically sound experiments, whereas GPT-3.5-turbo is less relevant in today's computing landscape). We didn't use LLMs from other families because we don't want to introduce confounding variables such as self-enhancement bias [1], meaning that the models tend to give biased preference toward responses generated from its own family, perhaps due to similar training data and architecture.</p> <p>Third, the grade is always parsed using OpenAI's structured output feature. OpenAI describes <a href="https://platform.openai.com/docs/guides/structured-outputs" rel="nofollow">structured output</a> as:</p> <blockquote><p>Structured Outputs is a feature that ensures the model will always generate responses that adhere to your supplied JSON Schema, so you don't need to worry about the model omitting a required key, or hallucinating an invalid enum value.</p></blockquote> <p>An example of a response without prior reasoning might look like</p> <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span><span class="token property">"score"</span><span class="token operator">:</span> <span class="token number">7</span><span class="token punctuation">}</span></code></pre> <p>Or</p> <pre class="language-json"><code class="language-json"><span class="token punctuation">{</span><span class="token property">"Explanation"</span><span class="token operator">:</span> <span class="token string">"The response is well-structured and engaging, effectively capturing the essence of a travel blog post. It includes a catchy title and subheading, which draw the reader in. The content is rich with cultural experiences, detailing visits to significant locations like the Bishop Museum and Iolani Palace, which adds depth to the narrative. The description of the luau at the Polynesian Cultural Center is vivid and enticing, showcasing local traditions and cuisine. The transition to the natural beauty of the Big Island and Maui is smooth, maintaining the reader's interest throughout. \\n\\nHowever, while the post is informative and engaging, it could benefit from a more personal touch or anecdotes that reflect the author's feelings or experiences during the trip. This would enhance the relatability and emotional connection with the reader. Additionally, while the attractions mentioned are significant, including a few lesser-known spots or tips for travelers could provide a more comprehensive guide. \\n\\nOverall, the response is strong in its execution, but a few enhancements could elevate it further. Thus, I would rate it an 8 out of 10 for its engaging content and informative nature, while acknowledging the potential for more personal storytelling."</span><span class="token punctuation">,</span><span class="token property">"score"</span><span class="token operator">:</span><span class="token string">"8"</span><span class="token punctuation">}</span></code></pre> <h3>Experiment 1: Does Higher Temperature Result in Larger Variances?</h3> <p>OpenAI describes the temperature parameter in its ChatCompletion API as follows:</p> <blockquote><p>Temperature: The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use log probability to automatically increase the temperature until certain thresholds are hit.</p></blockquote> <p>A natural hypothesis is that smaller temperatures would lead to more consistent grading. Experimental results support this hypothesis: lower temperatures indeed result in smaller variances.</p> <p>The following plot illustrates results obtained by evaluating three different judges (GPT-3.5-turbo, GPT-4o-mini, and GPT-4o) across temperature settings ranging from 0 to 1 in 0.1 increments.</p> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/2.png" alt="Temperature vs Variance plot showing correlation between higher temperatures and increased variance" title="Temperature vs Variance plot showing correlation between higher temperatures and increased variance"></p> <p>(Note: The variance is generally low, indicating that the judges are fairly consistent most of the time given the same prompt. Testing small prompt-level perturbations might simulate real-world settings better, but such experiments would be harder to quantify.)</p> <p>Using Spearman's correlation coefficient—a nonparametric measure of monotonicity ranging from -1 to 1—we find strong evidence that higher temperatures correlate with greater variances in numerical grading (<code>p &lt; 0.0001</code>).</p> <p>Interestingly, different models appear to be affected by temperature to varying degrees. This raises the question: Do larger models get less affected by temperature?</p> <h3>Experiment 2: Do Larger Models Get Less Affected By Temperature?</h3> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/3.png" alt="Score distribution across different temperatures" title="Score distribution across different temperatures"></p> <p>Not surprisingly, the judge's score distribution is normal. We can see that higher temperatures (the red distributions) result in a flatter, less centered distribution for the scores, while lower temperatures (the green distributions) result in a sharper, more centered distribution.</p> <p>What is more interesting is that different models seem to be affected by temperature differently. It seems that GPT-4o-mini is less affected by temperature compared to GPT-4o and GPT-3.5-turbo. This is confirmed by the Kruskal-Wallis and Mann-Whitney U-tests: at higher temperatures (temperature = 0.6, 0.7, 0.8), there is strong evidence suggesting that GPT-4o-mini has less variance compared to GPT-3.5-turbo and GPT-4o (<code>p &lt; 0.05</code>).</p> <p>So, what has made GPT-4o-mini more consistent than other models?</p> <p>It is certainly not model size that led to the difference, as in terms of size, GPT-4o-mini should be between GPT-3.5-turbo and GPT-4o. If a smaller model resulted in less variance, GPT-3.5-turbo would have the smallest variance.</p> <p>We hypothesize that this difference is due to its training process, specifically distillation. Even though OpenAI has not made its training process public, we know that GPT-4o-mini was released on July 18, 2024, a month after the larger GPT-4o model, which debuted on May 13, 2024. It is reasonable to conjecture that GPT-4o-mini is a distilled version of GPT-4o. In the work by Safaryan et al. [5], the author argues that knowledge distillation reduces the variance of output because the student approximates the teacher model's complex decision boundaries, resulting in smoother and more generalized boundaries. In other words, distillation serves as a regularizer, preventing the student model from overfitting to noise in the training data.</p> <p>Now we have an understanding of the model and temperature choice, let's move on to the prompt-engineering techniques. <strong>From now on, if otherwise mentioned, the model would be GPT-4o-mini and the temperature would be 0.5.</strong></p> <h3>Experiment 3: Does Giving the Judge Grading Guidelines Reduce the Variance? Are more detailed Guidelines Better?</h3> <p>When asking many humans to grade something on a numerical scale, the usual consistency practice is to have a grading guideline of what a score of 1 means, what a score of 2 means, etc.</p> <p>For LLM judges, people also commonly include grading guidelines in the prompt, in hope of increasing grading consistency. We'd like to explore whether these grading guidelines can actually help LLMs grade more consistently. After all, LLMs are more known for their language understanding than math. Surely the word "mediocre" means more to them than the number "5", right?</p> <p>To investigate whether a more detailed grading guideline leads to more consistent grading, we wrote, in the judge prompt, grading guidelines with different levels of specificity, ranging from the simplest to the most specific.</p> <p>Here are the levels of specificity we investigated:</p> <ol><li><strong>(Baseline, no guideline)</strong> Please provide only a score, with no explanation.</li> <li><strong>(Basic guideline)</strong> Please provide only a score, with no explanation. 1 means terrible, 5 means mediocre, and 10 means perfect.</li> <li><strong>(full scale)</strong> Please provide only a score, with no explanation. On a scale of 1 to 10: 1 is extremely terrible, 2 is terrible, [3 - 9 omitted for reader], and 10 is perfect.</li> <li><strong>(extremely detailed)</strong> On a scale of 1 to 10: 1. Flow: Completely disjointed; sentences and paragraphs lack any logical connection. Wording: Full of grammar, spelling, and syntax errors; sentences are nearly incomprehensible. Creativity: No originality or thought; entirely derivative or nonsensical. [2 - 9 omitted for reader] 10. Flow: Perfectly seamless; every sentence and paragraph feels purposeful and natural. Wording: Masterful use of language; evocative and impactful. Creativity: Exceptionally innovative and inspiring; a true standout piece.</li> <li><strong>(subscores)</strong> Break down the scale to sub scores. Novelty from 0-2, instruction following from 0-3, clarity from 0-2, truthiness from 0-2, formatting from 0-1. Submit the sum of the subscores but not the subscores themselves. (the 6.7960 course staff might find this breakdown vaguely familiar)</li></ol> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/4.png" alt="Comparison of grading guidelines and their effect on variance" title="Comparison of grading guidelines and their effect on variance"></p> <p>The result is surprising: no statistically significant relationship is found between the grading consistency and how specific the grading guidelines are. There is no evidence that the variances of the judges are different from one another.</p> <p>Why is grading guideline so important for humans but not for LLMs? A possible explanation is that for humans the grading guideline is there to help with inter-rater reliability, meaning the consistency between different people. Alice and Bob might have different opinions on what a 7 means - a grading guideline will help unify that.</p> <p>However, here we are measuring intra-rater reliability, meaning the LLM's consistency with its own grading. In this case, it seems like the LLM has a pretty good idea of what a 7 means to itself. A grading guideline might be more helpful if we are having multiple heterogeneous models rating the same response, which could be a follow-up study.</p> <h3>Experiment 4: Does Chain-of-Thought Make the Model More Consistent? What about Post-hoc Reasoning?</h3> <p>It is widely believed that chain-of-thought makes the response better [6]. It is also widely believed that it is important to have the model output reasoning before its conclusion, instead of after its conclusion (which we shall call post-hoc reasoning), because the LLM is autoregressive, and each token only attends to previous tokens.</p> <p>To implement chain-of-thought and post-hoc reasoning, we changed the prompt and the structured output schema.</p> <p>The prompt for chain-of-thought:</p> <pre class="language-python"><code class="language-python">prompt <span class="token operator">=</span> <span class="token triple-quoted-string string">"""[System]
+Please act as an impartial judge and evaluate the quality of the response provided by an AI assistant to the user question displayed below. Let's think step by step about the response's quality.
+
+[Question]
+What are the key features of Python's list comprehension?
+
+[The Start of Assistant's Answer]
+List comprehensions in Python provide a concise way to create lists based on existing sequences.
+[The End of Assistant's Answer]
+
+Let's analyze this response step by step:
+1. First, let's consider...
+2. Next, let's evaluate...
+3. Finally, let's look at...
+
+Based on this analysis, please provide a score between 1 and 10."""</span></code></pre> <p>In the case of post-hoc reasoning, the last line is changed to:</p> <pre class="language-python"><code class="language-python">"First provide a score from 1-10, then explain your reasoning step by step."</code></pre> <p>And the "reasoning before" schema is:</p> <pre class="language-python"><code class="language-python">functions <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+        <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"submit_score"</span><span class="token punctuation">,</span>
+        <span class="token string">"description"</span><span class="token punctuation">:</span> <span class="token string">"Submit a score and explanation for the LLM response"</span><span class="token punctuation">,</span>
+        <span class="token string">"parameters"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+            <span class="token string">"type"</span><span class="token punctuation">:</span> <span class="token string">"object"</span><span class="token punctuation">,</span>
+            <span class="token string">"properties"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                <span class="token string">"explanation"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"type"</span><span class="token punctuation">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
+                    <span class="token string">"description"</span><span class="token punctuation">:</span> <span class="token string">"Detailed explanation for the score"</span>
+                <span class="token punctuation">}</span><span class="token punctuation">,</span>
+                <span class="token string">"score"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span>
+                    <span class="token string">"type"</span><span class="token punctuation">:</span> <span class="token string">"integer"</span><span class="token punctuation">,</span>
+                    <span class="token string">"description"</span><span class="token punctuation">:</span> <span class="token string">"Score from 1-10 (10 being best)"</span><span class="token punctuation">,</span>
+                    <span class="token string">"minimum"</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+                    <span class="token string">"maximum"</span><span class="token punctuation">:</span> <span class="token number">10</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            <span class="token string">"required"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"explanation"</span><span class="token punctuation">,</span> <span class="token string">"score"</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">]</span></code></pre> <p>In the case where reasoning comes after, we swap the order of the arguments, so the properties become "score" first, then "explanation."</p> <p>We expected that chain-of-thought could reduce the variance of the output by more reliably "uncovering the truth," whereas post-hoc reasoning would have the same level of variance as no reasoning.</p> <p>The result is quite surprising.</p> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/5.png" alt="Effect of reasoning on grading variance" title="Effect of reasoning on grading variance"></p> <p>It looks like "Reasoning Before" results in higher variance! Levene's test confirms this (<code>p &lt; 0.05</code>). In other words, chain-of-thought does not make the model's grading more consistent. In fact, it makes the variance bigger!</p> <p>How to explain this phenomenon?</p> <p>We believe this is due the autoregressive nature of the LLM, where each reasoning step is conditioned on prior tokens. This dependency <a href="https://blog.iese.edu/artificial-intelligence-management/2024/chain-of-thought-reasoning-the-new-llm-breakthrough/" rel="nofollow">can magnify errors</a> [7] or deviations in earlier reasoning steps, contributing to higher variance. In other words, diverse reasoning paths lead to different conclusions. This should be able to be improved through the "<a href="https://arxiv.org/abs/2203.11171" rel="nofollow">self-consistency</a>" [8] technique, but without it, CoT actually leads to higher variance in grading, which is potentially undesirable.</p> <p>What is harder to explain is that prompting the LLM to add reasoning after the score also leads to less consistent grading. Theoretically, since the LLM is autoregressive, later tokens should not affect earlier tokens, but it appears that is not the case. While the difference in variance between reasoning after and no reasoning is not statistically significant (<code>p = 0.12</code>), it might still be worth discussing. We have no good theoretical explanation for this, so it might be an artifact of how OpenAI handles function calls, where even if "reasoning" appears later than "score" in the function argument, somehow the "score" token still attends to the "reasoning" tokens.</p> <p>The "reasoning increases variance" phenomenon is also confirmed by the score distribution (we also included the version without reasoning below for convenience of comparison).</p> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/6.png" alt="Score distribution with and without reasoning" title="Score distribution with and without reasoning"> <img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/7.png" alt="Score distribution with and without reasoning" title="Score distribution with and without reasoning"></p> <p>It seems that GPT-4o-mini, our "star of consistency" in Experiment 1, is more affected by reasoning than GPT-3.5 or GPT-4o. Kruskal-Wallis H-test confirms that this difference exists at temperature = 1.0 (<code>p &lt; 0.01</code>), but less so at lower temperatures, such as 0.5 (<code>0.05 &lt; p &lt; 0.1</code>) or 0.3 (<code>p &gt; 0.1</code>). At temperature 1.0, GPT-4o-mini is significantly more affected by reasoning than GPT-4o and GPT-3.5-turbo, according to Mann-Whitney U tests (<code>p &lt; 0.01</code>).</p> <p>We have three possible explanations for this:</p> <ol><li><strong>Confusion hypothesis</strong>: Less capable models (like GPT-4o-mini compared to GPT-4o) "confuse themselves" when reasoning, especially at higher temperatures, leading to more varied paths and conclusions. This wouldn't explain why GPT-3.5-turbo is also less affected, though.</li> <li><strong>Distillation hypothesis</strong>: If, as hypothesized in Experiment 2, GPT-4o-mini has lower variance when it doesn't reason because it is trained on a smoother decision boundary, the teacher model being an implicit regularizer protecting it from the noise in the data, the reasoning might be where the noise in the data rears its ugly head.</li> <li><strong>Capped variance hypothesis</strong>: Reasoning might only increase the variance to a certain level for a given temperature. For GPT-4o and GPT-3.5, they may have already reached that level of variance, so reasoning does not make it worse. But because GPT-4o-mini initially had a smaller variance, reasoning increased it more.</li></ol> <p>This indicates that the chain-of-thought reasoning technique, without self-consistency, can result in undesirable outcomes such as inconsistency, and its effect on different models is disproportionate.</p> <p>People generally believe chain-of-thought is good, but here we show that it hurts consistency. Is there another possibility here? Is it possible that chain-of-thought hurts consistency, but in some good way because it changes a consistently bad grading to a sometimes good grading? We will explore this in the following experiment.</p> <h3>Experiment 5: How does Pointwise Grading compare to Pairwise Comparison? Does certain techniques improve its Agreement with Human Evaluation?</h3> <p>We have shown some techniques that would improve or hurt consistency. However, the reason we use LLM judges is that they could approximate human preference, which is otherwise expensive to obtain. Does there exist a bias-variance tradeoff? Do these techniques that help with consistency also help with human alignment? Does chain-of-thought hurt consistency but improve grading by turning consistently bad grading into sometimes good grading?</p> <h4>Experiment Setup</h4> <p>We conducted our experiments using a subset of the MT-bench dataset. This dataset contains 1,000 pairs of responses generated by two different models, along with expert annotations that indicate which response is better ("model_a," "model_b," or "tie").</p> <p><strong>Prompt Design</strong>: For our baseline, we used pairwise comparison, which is the standard method for judging two responses. We adopted the prompt from [2], attached below.</p> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/8.png" alt="Baseline prompt example for pairwise comparison" title="Baseline prompt example for pairwise comparison"></p> <p><strong>Scoring</strong>:</p> <ul><li>If the human and the LLM both selected "model_a," "model_b," or "tie," the LLM earned 1 point.</li> <li>If one selected "model_a" or "model_b" and the other selected "tie," the LLM earned 0.5 points.</li> <li>Otherwise, the LLM earned 0 points.</li></ul> <p>The total accuracy was calculated as the proportion of points scored over all pairs.</p> <p><strong>Converting Pointwise Grading to Pairwise Comparison:</strong></p> <p>To evaluate pointwise grading, we used the following approach:
+• Assign grades to each response independently on a numerical scale (e.g., 1 to 10).
+• Compare the grades:
+• If the grade for one response was higher, it was deemed the better response (e.g., "model_a" or "model_b").
+• If the grades were equal, the outcome was labeled "tie."
+• We applied this conversion across all 1,000 response pairs and evaluated variations of pointwise grading using the same scoring system as the baseline.</p> <h4>Results</h4> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/9.png" alt="Results comparing different methods" title="Results comparing different methods"></p> <ol><li><strong>All methods outperformed random choice or always returning "tie."</strong></li></ol> <p>This was expected, as both pairwise and pointwise methods leverage the LLM's understanding of response quality.</p> <ol start="2"><li><strong>Chain-of-thought reasoning performed significantly worse than other techniques.</strong></li></ol> <p>This was confirmed using a Friedman test followed by a post-hoc Nemenyi test (<code>p &lt; 0.05</code>).</p> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/10.png" alt="Graph showing performance comparison of different methods" title="Graph showing performance comparison of different methods"></p> <p>As we can see from the graph, while the difference in terms of human alignment for other non-baseline methods are statistically insignificant, all non-baseline methods are better than "reasoning before", i.e. chain-of-thought.</p> <h4>Temperature's Effect on Alignment</h4> <p>We further analyzed how temperature affects agreement with human evaluations. The results provided additional insights:</p> <p><img src="./Quantifying Numerical Consistency of LLM-as-a-Judge_files/11.png" alt="Temperature's effect on model performance" title="Temperature's effect on model performance"></p> <p>It seems like the higher the temperature, the worse the reasoning gets. This is confirmed by a Friedman test (<code>p &lt; 0.001</code>). The difference for "no reasoning" is statistically insignificant (<code>p &gt; 0.1</code>).</p> <p>A possible explanation is the <strong>Confusion Hypothesis</strong> from Experiment 2: when reasoning at higher temperatures, LLMs may generate overly complex or divergent paths, "confusing" themselves. In such cases, relying on the model's initial intuition—captured in the first token—can produce better results.</p> <h2>Conclusion</h2> <p>In conclusion, in using LLM as a judge, compared to pairwise comparison, pointwise grading is just as good, if not better, at matching human preference. It is scalable, less bias-prone, and allows specifying a confidence interval. It is fairly consistent already (variance <code>&lt; 0.4</code> in most cases), but if we want more consistency, we should grade at lower temperature like t=0.2 without chain-of-thought, using a distilled model like GPT-4o-mini. Increasing the number of trials and giving scoring guidelines doesn't actually affect the output.</p> <h2>Bibliography</h2> <p>[1] Wolfe, C. R. (n.d.). <em>LLM-as-a-Judge</em>. Substack. Retrieved December 10, 2024, from <a href="https://cameronrwolfe.substack.com/p/llm-as-a-judge#footnote-1-141159804" rel="nofollow">https://cameronrwolfe.substack.com/p/llm-as-a-judge#footnote-1-141159804</a></p> <p>[2] Zheng, L., Chiang, W.-L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, D., Xing, E. P., Zhang, H., Gonzalez, J. E., &amp; Stoica, I. (2023). <em>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2306.05685" rel="nofollow">https://doi.org/10.48550/arXiv.2306.05685</a></p> <p>[3] Ye, J., Wang, Y., Huang, Y., Chen, D., Zhang, Q., Moniz, N., Gao, T., Geyer, W., Huang, C., Chen, P.-Y., Chawla, N. V., &amp; Zhang, X. (2024). <em>Justice or prejudice? Quantifying biases in LLM-as-a-Judge</em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2410.02736" rel="nofollow">https://doi.org/10.48550/arXiv.2410.02736</a></p> <p>[4] Zheng, L., Chiang, W.-L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, D., Xing, E. P., Zhang, H., Gonzalez, J. E., &amp; Stoica, I. (2023). <em>Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2306.05685" rel="nofollow">https://doi.org/10.48550/arXiv.2306.05685</a></p> <p>[5] Safaryan, M., Peste, A., &amp; Alistarh, D. (2023). <em>Knowledge distillation performs partial variance reduction</em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2305.17581" rel="nofollow">https://doi.org/10.48550/arXiv.2305.17581</a></p> <p>[6] Liu, Yang, et al. "G-eval: Nlg evaluation using gpt-4 with better human alignment." arXiv preprint arXiv:2303.16634 (2023).</p> <p>[7] IESE Business School. (2024). <em>Chain of thought reasoning: The new LLM breakthrough</em>. Artificial Intelligence &amp; Management Blog. <a href="https://blog.iese.edu/artificial-intelligence-management/2024/chain-of-thought-reasoning-the-new-llm-breakthrough/" rel="nofollow">https://blog.iese.edu/artificial-intelligence-management/2024/chain-of-thought-reasoning-the-new-llm-breakthrough/</a></p> <p>[8] Wang, X., Wei, J., Schuurmans, D., Le, Q., Chi, E., Narang, S., Chowdhery, A., &amp; Zhou, D. (2023). <em>Self-consistency improves chain of thought reasoning in language models</em>. arXiv. <a href="https://doi.org/10.48550/arXiv.2203.11171" rel="nofollow">https://doi.org/10.48550/arXiv.2203.11171</a></p><!--<Deep_learning>--></section><!--<+page>--></main></div><!--<+layout>--> <div id="svelte-announcer" aria-live="assertive" aria-atomic="true" style="position: absolute; left: 0px; top: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px;">Quantifying Numerical Consistency of LLM-as-a-Judge</div><!--<Root>--></div>
+	
+
+</body><div style="position: absolute; bottom: 0px; left: 0px; height: 0px; z-index: 5;"><template shadowrootmode="open"><div id="plasmo-overlay-0" class="plasmo-csui-container" style="display: flex; position: absolute; top: 0px; left: 0px;"></div></template></div></html>
